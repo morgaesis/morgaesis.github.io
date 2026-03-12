@@ -1,0 +1,225 @@
+---
+const projects = [
+  {
+    name: "tooler",
+    url: "https://github.com/morgaesis/tooler",
+    desc: "Automate CLI tool management from GitHub Releases. Version control and auto-updates.",
+  },
+  {
+    name: "ssh-guard",
+    url: "https://github.com/morgaesis/ssh-guard",
+    desc: "LLM-powered SSH command filter for AI agents. Evaluate every command before execution.",
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mörgæsis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Mörgæsis</h1>
+        <p class="haiku">
+          Clean code, beautiful<br />
+          Correct functions, pragmatic<br />
+          Best editor ViM
+        </p>
+        <nav>
+          <span class="loc">Antarctica</span>
+          <span class="sep">/</span>
+          <a href="https://github.com/morgaesis">github</a>
+        </nav>
+      </header>
+
+      <section>
+        <h2>Recent work</h2>
+        <ul>
+          {projects.map((p) => (
+            <li>
+              <a href={p.url}>{p.name}</a>
+              <span class="dash">&mdash;</span>
+              <span class="desc">{p.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+
+    <style>
+      :root {
+        --cream: #f5f0e8;
+        --ink: #1a1714;
+        --mid: #6b6259;
+        --faint: #c8bfb2;
+        --rule: #d9d0c3;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 18px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        background: var(--cream);
+        color: var(--ink);
+        line-height: 1.7;
+        min-height: 100vh;
+        padding: 0 1.5rem;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 12vh 0 8vh;
+      }
+
+      header {
+        margin-bottom: 4rem;
+      }
+
+      h1 {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-size: 3.2rem;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 1.2rem;
+        animation: fadeUp 0.6s ease both;
+      }
+
+      .haiku {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.15rem;
+        color: var(--mid);
+        line-height: 1.8;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+        animation: fadeUp 0.6s ease 0.1s both;
+      }
+
+      nav {
+        font-size: 0.82rem;
+        color: var(--faint);
+        letter-spacing: 0.03em;
+        animation: fadeUp 0.6s ease 0.2s both;
+      }
+
+      nav a {
+        color: var(--mid);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+      }
+
+      nav a:hover {
+        border-bottom-color: var(--ink);
+        color: var(--ink);
+      }
+
+      .sep {
+        margin: 0 0.5rem;
+      }
+
+      .loc {
+        color: var(--faint);
+      }
+
+      section {
+        animation: fadeUp 0.6s ease 0.3s both;
+      }
+
+      h2 {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--faint);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      li {
+        margin-bottom: 1.4rem;
+        line-height: 1.6;
+      }
+
+      li a {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.2rem;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1.5px solid var(--rule);
+        transition: border-color 0.2s;
+      }
+
+      li a:hover {
+        border-bottom-color: var(--ink);
+      }
+
+      .dash {
+        margin: 0 0.4rem;
+        color: var(--faint);
+        font-size: 0.9rem;
+      }
+
+      .desc {
+        color: var(--mid);
+        font-size: 0.88rem;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 480px) {
+        html {
+          font-size: 16px;
+        }
+        main {
+          padding: 8vh 0 6vh;
+        }
+        h1 {
+          font-size: 2.4rem;
+        }
+        .dash {
+          display: none;
+        }
+        .desc {
+          display: block;
+          margin-top: 0.2rem;
+        }
+      }
+    </style>
+  </body>
+</html>
