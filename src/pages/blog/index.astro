@@ -1,0 +1,204 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog — Mörgæsis</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Mörgæsis"
+      href="/rss.xml"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <nav class="back">
+        <a href="/">&larr; home</a>
+      </nav>
+
+      <h1>Blog</h1>
+
+      {
+        posts.length === 0 ? (
+          <p class="empty">Nothing here yet.</p>
+        ) : (
+          <ul>
+            {posts.map((post) => {
+              const formatted = post.data.date.toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              });
+              return (
+                <li>
+                  <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                  <time datetime={post.data.date.toISOString()}>
+                    {formatted}
+                  </time>
+                  {post.data.description && (
+                    <span class="desc">{post.data.description}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+
+      <div class="rss">
+        <a href="/rss.xml">RSS feed</a>
+      </div>
+    </main>
+
+    <style>
+      :root {
+        --cream: #f5f0e8;
+        --ink: #1a1714;
+        --mid: #6b6259;
+        --faint: #c8bfb2;
+        --rule: #d9d0c3;
+        --amber: #c97b3a;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 18px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        background: var(--cream);
+        color: var(--ink);
+        line-height: 1.7;
+        min-height: 100vh;
+        padding: 0 1.5rem;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 8vh 0 8vh;
+      }
+
+      .back {
+        font-size: 0.82rem;
+        margin-bottom: 3rem;
+      }
+
+      .back a {
+        color: var(--faint);
+        text-decoration: none;
+        border-bottom: none;
+        transition: color 0.2s;
+      }
+
+      .back a:hover {
+        color: var(--ink);
+      }
+
+      h1 {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-size: 2.4rem;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 2.5rem;
+      }
+
+      .empty {
+        color: var(--faint);
+        font-style: italic;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      li {
+        margin-bottom: 1.8rem;
+        line-height: 1.5;
+      }
+
+      li a {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.3rem;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1.5px solid var(--rule);
+        transition: border-color 0.2s;
+        display: block;
+      }
+
+      li a:hover {
+        border-bottom-color: var(--ink);
+      }
+
+      time {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--faint);
+        letter-spacing: 0.02em;
+        margin-top: 0.2rem;
+      }
+
+      .desc {
+        display: block;
+        color: var(--mid);
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+      }
+
+      .rss {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
+        font-size: 0.78rem;
+      }
+
+      .rss a {
+        color: var(--faint);
+        text-decoration: none;
+        border-bottom: none;
+        transition: color 0.2s;
+      }
+
+      .rss a:hover {
+        color: var(--ink);
+      }
+
+      @media (max-width: 480px) {
+        html {
+          font-size: 16px;
+        }
+        main {
+          padding: 6vh 0 6vh;
+        }
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Mörgæsis</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+
+    <style is:global>
+      :root {
+        --cream: #f5f0e8;
+        --ink: #1a1714;
+        --mid: #6b6259;
+        --faint: #c8bfb2;
+        --rule: #d9d0c3;
+        --amber: #c97b3a;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 18px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        background: var(--cream);
+        color: var(--ink);
+        line-height: 1.7;
+        min-height: 100vh;
+        padding: 0 1.5rem;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 12vh 0 8vh;
+      }
+
+      a {
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1.5px solid var(--rule);
+        transition: border-color 0.2s;
+      }
+
+      a:hover {
+        border-bottom-color: var(--ink);
+      }
+
+      @media (max-width: 480px) {
+        html {
+          font-size: 16px;
+        }
+        main {
+          padding: 8vh 0 6vh;
+        }
+      }
+    </style>
+  </body>
+</html>
