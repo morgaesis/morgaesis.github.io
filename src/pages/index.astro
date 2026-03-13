@@ -18,6 +18,7 @@ const projects = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mörgæsis</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,7 +29,14 @@ const projects = [
   <body>
     <main>
       <header>
-        <h1>Mörgæsis</h1>
+        <div class="brand">
+          <svg class="logo" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M44 22L12 64L44 106" stroke="var(--ink)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M84 22L116 64L84 106" stroke="var(--ink)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M64 42L78 64L64 86L50 64Z" fill="var(--amber)"/>
+          </svg>
+          <h1>Mörgæsis</h1>
+        </div>
         <p class="haiku">
           Clean code, beautiful<br />
           Correct functions, pragmatic<br />
@@ -62,6 +70,7 @@ const projects = [
         --mid: #6b6259;
         --faint: #c8bfb2;
         --rule: #d9d0c3;
+        --amber: #c97b3a;
       }
 
       * {
@@ -95,14 +104,26 @@ const projects = [
         margin-bottom: 4rem;
       }
 
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: fadeUp 0.6s ease both;
+      }
+
+      .logo {
+        width: 2.6rem;
+        height: 2.6rem;
+        flex-shrink: 0;
+      }
+
       h1 {
         font-family: "Instrument Serif", serif;
         font-weight: 400;
         font-size: 3.2rem;
         letter-spacing: -0.03em;
         line-height: 1.1;
-        margin-bottom: 1.2rem;
-        animation: fadeUp 0.6s ease both;
+        margin-bottom: 0;
       }
 
       .haiku {
@@ -111,6 +132,7 @@ const projects = [
         color: var(--mid);
         line-height: 1.8;
         font-style: italic;
+        margin-top: 1.2rem;
         margin-bottom: 1.5rem;
         animation: fadeUp 0.6s ease 0.1s both;
       }
