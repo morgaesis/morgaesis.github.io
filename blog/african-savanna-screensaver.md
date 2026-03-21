@@ -4,7 +4,7 @@ date: 2026-03-21
 description: What happens when you give Claude Code a creative prompt and let it iterate autonomously on a 10-minute loop.
 ---
 
-![The savannah at night: pixel-art animals under a starfield with the moon overhead.](/savannah.png)
+[![Sunset over the savanna: pixel-art animals grazing under an orange sky.](/savannah.png)](https://africa.morgaes.is/?t=17.5&seed=7742)
 
 The prompt:
 
