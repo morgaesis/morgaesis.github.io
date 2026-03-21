@@ -6,9 +6,17 @@ description: What happens when you give Claude Code a creative prompt and let it
 
 ![The savannah at night: pixel-art animals under a starfield with the moon overhead.](/savannah.png)
 
-The prompt was straightforward: a browser-based pixel-art screensaver of an African savanna. Animals grazing, predators hunting, a day/night cycle, procedural audio. Written in Bun/TypeScript, served on port 4680, with hot-reload so that the agent's progress would appear on-screen in real time. Click to fullscreen. Minimal collapsible controls.
+The prompt:
 
-The prompt went to [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Then a cron job took over, firing every ten minutes with a single instruction: "Make some improvement. Even if complete, find some aspect to improve. Always improve."
+> I want a "screensaver" in a browser, that shows a pixelart view of an African plain, with a few trees, shrub, some animals, some prey/predator play, some semi-realistic lighting, sun is almost setting (dusk?/pre-sunset). Make the animals interact, graze, drink, predators chase, some birds, each animal with coherent "memory". Make the view only a part of the entire sandbox, as if looking out of a window of a house. Write in bun/TS, run on port 4680; my browser will be waiting, and I want hot-reloading so your progress becomes my screensaver. Click to fullscreen. Minimal controls in the bottom-right, collapsible.
+
+This went to [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Then a cron job took over, firing every ten minutes with a single instruction:
+
+```
+Make _some_ improvement to the project. Even if complete, find some aspect
+to improve, improve performance, behaviour/animal logic, look and feel.
+Always improve.
+```
 
 Five hours and 30 commits later, the result was a full ecosystem simulation running at [africa.morgaes.is](https://africa.morgaes.is). Source at [morgaesis/savannah](https://github.com/morgaesis/savannah).
 
