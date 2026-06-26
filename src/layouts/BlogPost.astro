@@ -77,14 +77,14 @@ const formatted = date.toLocaleDateString("en-GB", {
         color: var(--ink);
         line-height: 1.7;
         min-height: 100vh;
-        padding: 0 1.5rem;
+        padding: 0;
         -webkit-font-smoothing: antialiased;
       }
 
       main {
         max-width: 540px;
         margin: 0 auto;
-        padding: 8vh 0 8vh;
+        padding: 8vh clamp(1.25rem, 5vw, 2rem) 8vh;
       }
 
       .back {
@@ -114,6 +114,7 @@ const formatted = date.toLocaleDateString("en-GB", {
         letter-spacing: -0.03em;
         line-height: 1.15;
         margin-bottom: 0.5rem;
+        overflow-wrap: anywhere;
       }
 
       time {
@@ -143,11 +144,16 @@ const formatted = date.toLocaleDateString("en-GB", {
         color: var(--ink);
       }
 
+      .prose {
+        overflow-wrap: break-word;
+      }
+
       .prose :global(a) {
         color: var(--ink);
         text-decoration: none;
         border-bottom: 1.5px solid var(--rule);
         transition: border-color 0.2s;
+        overflow-wrap: anywhere;
       }
 
       .prose :global(a:hover) {
@@ -177,6 +183,7 @@ const formatted = date.toLocaleDateString("en-GB", {
         background: #e8e3db;
         padding: 0.15em 0.4em;
         border-radius: 3px;
+        overflow-wrap: anywhere;
       }
 
       .prose :global(pre) {
@@ -245,7 +252,8 @@ const formatted = date.toLocaleDateString("en-GB", {
           font-size: 16px;
         }
         main {
-          padding: 6vh 0 6vh;
+          padding: 6vh max(1.25rem, env(safe-area-inset-left)) 6vh
+            max(1.25rem, env(safe-area-inset-right));
         }
         h1 {
           font-size: 1.8rem;

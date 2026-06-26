@@ -92,14 +92,14 @@ const posts = (await getCollection("blog"))
         color: var(--ink);
         line-height: 1.7;
         min-height: 100vh;
-        padding: 0 1.5rem;
+        padding: 0;
         -webkit-font-smoothing: antialiased;
       }
 
       main {
         max-width: 540px;
         margin: 0 auto;
-        padding: 8vh 0 8vh;
+        padding: 8vh clamp(1.25rem, 5vw, 2rem) 8vh;
       }
 
       .back {
@@ -125,6 +125,7 @@ const posts = (await getCollection("blog"))
         letter-spacing: -0.03em;
         line-height: 1.1;
         margin-bottom: 2.5rem;
+        overflow-wrap: anywhere;
       }
 
       .empty {
@@ -149,6 +150,7 @@ const posts = (await getCollection("blog"))
         border-bottom: 1.5px solid var(--rule);
         transition: border-color 0.2s;
         display: block;
+        overflow-wrap: anywhere;
       }
 
       li a:hover {
@@ -168,6 +170,7 @@ const posts = (await getCollection("blog"))
         color: var(--mid);
         font-size: 0.85rem;
         margin-top: 0.2rem;
+        overflow-wrap: anywhere;
       }
 
       .rss {
@@ -193,7 +196,8 @@ const posts = (await getCollection("blog"))
           font-size: 16px;
         }
         main {
-          padding: 6vh 0 6vh;
+          padding: 6vh max(1.25rem, env(safe-area-inset-left)) 6vh
+            max(1.25rem, env(safe-area-inset-right));
         }
         h1 {
           font-size: 1.8rem;
