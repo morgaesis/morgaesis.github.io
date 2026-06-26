@@ -202,6 +202,38 @@ const formatted = date.toLocaleDateString("en-GB", {
         margin: 2rem 0;
       }
 
+      .prose :global(.footnotes) {
+        border-top: 1px solid var(--rule);
+        margin-top: 2rem;
+        padding-top: 1rem;
+        font-size: 0.82rem;
+        color: var(--mid);
+      }
+
+      .prose :global(.footnotes p) {
+        margin-bottom: 0.6rem;
+      }
+
+      .prose :global(.footnotes ol) {
+        margin-bottom: 0;
+      }
+
+      .prose :global(.data-footnote-backref) {
+        border-bottom: none;
+      }
+
+      .prose :global(.sr-only) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
       .prose :global(img) {
         max-width: 100%;
         border-radius: 6px;
