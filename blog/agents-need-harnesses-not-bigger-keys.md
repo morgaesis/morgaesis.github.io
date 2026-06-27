@@ -294,14 +294,14 @@ Check four blast radii: mutation, disclosure, network reach, and supply-chain re
 
 <figure class="article-figure sandbox-figure" aria-label="Interactive sandbox visualization showing an agent disturbing state inside a glass box while production remains outside.">
   <figcaption>Useful freedom still needs walls.</figcaption>
-  <div class="sandbox-stage" data-sandbox-stage tabindex="0" role="button" aria-label="A roaming agent bumps around inside a glass sandbox. Sand moves, the box shakes, and production stays outside. Tap to nudge the agent.">
+  <div class="sandbox-stage" data-sandbox-stage tabindex="0" role="button" aria-label="A roaming agent bumps around inside a glass sandbox. The box shakes at the boundary and production stays outside. Tap to nudge the agent.">
     <canvas width="1080" height="720"></canvas>
     <div class="sandbox-hud" aria-hidden="true">
       <span>sandbox</span>
       <span>boundary</span>
       <span>production</span>
     </div>
-    <div class="sandbox-mode" aria-live="polite">contained exploration: state moves inside the box</div>
+    <div class="sandbox-mode" aria-live="polite">contained exploration: the agent stays inside the boundary</div>
   </div>
 </figure>
 
