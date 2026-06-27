@@ -910,7 +910,7 @@ const formatted = date.toLocaleDateString("en-GB", {
 
       @media (min-width: 1120px) {
         main {
-          max-width: min(1120px, calc(100vw - 4rem));
+          max-width: min(900px, calc(100vw - 3rem));
           padding-left: clamp(1rem, 3vw, 2rem);
           padding-right: clamp(1rem, 3vw, 2rem);
         }
@@ -918,12 +918,12 @@ const formatted = date.toLocaleDateString("en-GB", {
         .back,
         article header {
           max-width: 648px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .prose {
           --reader-width: 648px;
-          --aside-gap: 2rem;
-          --aside-width: clamp(360px, 36vw, 440px);
         }
 
         .prose :global(p),
@@ -935,21 +935,24 @@ const formatted = date.toLocaleDateString("en-GB", {
         .prose :global(pre),
         .prose :global(hr),
         .prose :global(.footnotes) {
+          margin-left: auto;
+          margin-right: auto;
           max-width: var(--reader-width);
         }
 
         .prose :global(.article-figure) {
-          clear: right;
-          float: right;
-          margin: 0.25rem 0 1.5rem var(--aside-gap);
+          clear: both;
+          margin-left: auto;
+          margin-right: auto;
           padding: 0.85rem 0;
-          width: var(--aside-width);
+          width: min(760px, 100%);
         }
 
         .prose :global(.sketch-figure) {
-          margin-left: var(--aside-gap);
+          margin-left: auto;
+          margin-right: auto;
           transform: none;
-          width: clamp(420px, 39vw, 520px);
+          width: min(860px, 100%);
         }
 
         .prose :global(.gate-map) {
@@ -963,6 +966,46 @@ const formatted = date.toLocaleDateString("en-GB", {
 
         .prose :global(.footnotes) {
           clear: both;
+        }
+      }
+
+      @media (min-width: 1240px) {
+        main {
+          max-width: min(1530px, calc(100vw - 1rem));
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .prose {
+          --aside-gap: 1.35rem;
+          --aside-width: min(400px, calc((100vw - var(--reader-width) - 3rem) / 2));
+        }
+
+        .prose :global(.article-figure:not(.sketch-figure)) {
+          clear: both;
+          width: var(--aside-width);
+        }
+
+        .prose :global(.gate-matrix),
+        .prose :global(.evidence-split) {
+          clear: right;
+          float: right;
+          margin: 0.35rem 0 1.5rem var(--aside-gap);
+        }
+
+        .prose :global(.consequence-figure),
+        .prose :global(.sandbox-figure) {
+          clear: left;
+          float: left;
+          margin: 0.35rem var(--aside-gap) 1.5rem 0;
+        }
+
+        .prose :global(.sketch-figure) {
+          clear: both;
+          float: none;
+          margin-bottom: 2.6rem;
+          margin-top: 2.4rem;
+          width: min(920px, 100%);
         }
       }
 
