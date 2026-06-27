@@ -207,8 +207,8 @@ This is where the work item matters again. The approval should bind to the disru
 
 <figure class="article-figure consequence-figure" aria-label="Interactive visualization showing that higher-consequence actions face stricter gates.">
   <figcaption>Higher consequence closes heavier gates.</figcaption>
-  <div class="consequence-stage" data-consequence-stage tabindex="0" role="button" aria-label="Move left to right to increase consequence. The operation token passes light gates and stops at irreversible gates. Tap to cycle consequence levels.">
-    <svg class="consequence-map" viewBox="0 0 640 340" aria-hidden="true">
+  <div class="consequence-stage" data-consequence-stage tabindex="0" role="button" aria-label="Move top to bottom to increase consequence. The operation token moves through stricter gates and stops at irreversible work. Tap to cycle consequence levels.">
+    <svg class="consequence-map" viewBox="0 0 360 420" aria-hidden="true">
       <defs>
         <filter id="consequence-glow" x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="6" result="blur" />
@@ -218,42 +218,45 @@ This is where the work item matters again. The approval should bind to the disru
           </feMerge>
         </filter>
       </defs>
-      <path class="consequence-track" d="M48 232 H592" />
+      <rect class="consequence-panel" x="28" y="44" width="304" height="330" rx="20" />
+      <text x="42" y="30">consequence gate</text>
+      <path class="consequence-track" d="M74 84 V334" />
+      <path class="consequence-trail" data-consequence-trail d="M74 84 V84" />
       <g class="consequence-lane lane-local" data-level-lane="local">
-        <text x="92" y="48">local</text>
-        <path class="turnstile" d="M116 90 V184 M86 136 H146 M116 136 L146 106 M116 136 L146 166" />
-        <path class="gate-pass" d="M82 206 C100 190 132 190 152 206" />
+        <rect class="consequence-control control-local" x="112" y="58" width="178" height="58" rx="10" />
+        <path class="control-symbol" d="M136 88 H164 M150 74 V102" />
+        <text x="186" y="80">local</text>
+        <text class="control-note" x="186" y="102">record it</text>
       </g>
       <g class="consequence-lane lane-reversible" data-level-lane="reversible">
-        <text x="210" y="48">reversible</text>
-        <rect class="gate-frame" x="216" y="84" width="70" height="106" rx="8" />
-        <path class="half-gate" d="M222 156 H278" />
-        <path class="revert-arrow" d="M238 118 C266 104 282 132 258 148 M258 148 L260 130 M258 148 L276 145" />
+        <rect class="consequence-control control-reversible" x="112" y="138" width="178" height="58" rx="10" />
+        <path class="control-symbol" d="M136 168 C154 150 176 166 160 184 M160 184 L162 168 M160 184 L178 181" />
+        <text x="186" y="160">reversible</text>
+        <text class="control-note" x="186" y="182">rollback attached</text>
       </g>
       <g class="consequence-lane lane-disruptive" data-level-lane="disruptive">
-        <text x="348" y="48">disruptive</text>
-        <rect class="gate-frame heavy" x="358" y="76" width="74" height="126" rx="8" />
-        <path class="warning-bars" d="M370 102 H420 M370 128 H420 M370 154 H420 M370 180 H420" />
-        <circle class="warning-light light-left" cx="368" cy="68" r="7" />
-        <circle class="warning-light light-right" cx="422" cy="68" r="7" />
+        <rect class="consequence-control control-disruptive" x="112" y="218" width="178" height="58" rx="10" />
+        <path class="control-symbol" d="M136 238 H170 M136 254 H170 M136 270 H170" />
+        <circle class="warning-light light-left" cx="133" cy="215" r="6" />
+        <circle class="warning-light light-right" cx="169" cy="215" r="6" />
+        <text x="186" y="240">disruptive</text>
+        <text class="control-note" x="186" y="262">canary + SLO</text>
       </g>
       <g class="consequence-lane lane-irreversible" data-level-lane="irreversible">
-        <text x="492" y="48">irreversible</text>
-        <rect class="blast-door" x="500" y="72" width="80" height="138" rx="10" />
-        <path class="blast-brace" d="M510 96 H570 M510 124 H570 M510 152 H570 M510 180 H570" />
-        <path class="blast-lock" d="M526 142 V128 C526 110 554 110 554 128 V142 M520 142 H560 V176 H520 Z" />
+        <rect class="consequence-control control-irreversible" x="112" y="298" width="178" height="58" rx="10" />
+        <path class="control-symbol" d="M136 318 H170 M136 350 H170" />
+        <path class="control-lock" d="M144 338 V328 C144 316 164 316 164 328 V338 M136 338 H172 V356 H136 Z" />
+        <text x="186" y="320">irreversible</text>
+        <text class="control-note" x="186" y="342">new approval</text>
       </g>
-      <path class="consequence-trail" data-consequence-trail d="M48 232 H118" />
-      <circle class="consequence-token-ring" data-consequence-ring cx="70" cy="232" r="18" />
-      <circle class="consequence-token" data-consequence-token cx="70" cy="232" r="10" filter="url(#consequence-glow)" />
-      <g class="consequence-sparks" data-consequence-sparks>
-        <path d="M486 218 L472 202" />
-        <path d="M502 214 L512 194" />
-        <path d="M514 232 L536 224" />
-        <path d="M500 248 L514 268" />
-      </g>
+      <circle class="consequence-stop stop-local" cx="74" cy="84" r="5" />
+      <circle class="consequence-stop stop-reversible" cx="74" cy="164" r="5" />
+      <circle class="consequence-stop stop-disruptive" cx="74" cy="244" r="5" />
+      <circle class="consequence-stop stop-irreversible" cx="74" cy="324" r="5" />
+      <circle class="consequence-token-ring" data-consequence-ring cx="74" cy="84" r="18" />
+      <circle class="consequence-token" data-consequence-token cx="74" cy="84" r="10" filter="url(#consequence-glow)" />
     </svg>
-    <p class="consequence-status" aria-live="polite">Local action: the token passes through a light gate.</p>
+    <p class="consequence-status" aria-live="polite">Local action: record the operation and let the token pass.</p>
   </div>
 </figure>
 
