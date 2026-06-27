@@ -58,6 +58,10 @@ const formatted = date.toLocaleDateString("en-GB", {
         --faint: #c8bfb2;
         --rule: #d9d0c3;
         --amber: #c97b3a;
+        --teal: #3f8f8a;
+        --moss: #6f8d51;
+        --rose: #bf5f5a;
+        --paper: #eee8de;
       }
 
       * {
@@ -84,7 +88,7 @@ const formatted = date.toLocaleDateString("en-GB", {
       main {
         max-width: 540px;
         margin: 0 auto;
-        padding: 8vh clamp(1.25rem, 5vw, 2rem) 8vh;
+        padding: 8vh clamp(0.5rem, 2vw, 0.8rem) 8vh;
       }
 
       .back {
@@ -111,16 +115,17 @@ const formatted = date.toLocaleDateString("en-GB", {
         font-family: "Instrument Serif", serif;
         font-weight: 400;
         font-size: 2.4rem;
-        letter-spacing: -0.03em;
+        letter-spacing: 0;
         line-height: 1.15;
         margin-bottom: 0.5rem;
         overflow-wrap: anywhere;
+        text-wrap: balance;
       }
 
       time {
         font-size: 0.78rem;
         color: var(--faint);
-        letter-spacing: 0.02em;
+        letter-spacing: 0;
       }
 
       .prose :global(h2) {
@@ -158,6 +163,28 @@ const formatted = date.toLocaleDateString("en-GB", {
 
       .prose :global(a:hover) {
         border-bottom-color: var(--ink);
+      }
+
+      .prose :global(sup) {
+        line-height: 0;
+      }
+
+      .prose :global(a[data-footnote-ref]) {
+        align-items: center;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        display: inline-flex;
+        font-size: 0.6em;
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        justify-content: center;
+        letter-spacing: 0;
+        line-height: 1.35;
+        margin: 0 0.14em;
+        min-width: 1.55em;
+        padding: 0.02em 0.5em;
+        transform: translateY(-0.08em);
+        vertical-align: super;
       }
 
       .prose :global(ul),
@@ -209,6 +236,615 @@ const formatted = date.toLocaleDateString("en-GB", {
         margin: 2rem 0;
       }
 
+      .prose :global(.article-figure) {
+        border-bottom: 1px solid var(--rule);
+        border-top: 1px solid var(--rule);
+        margin: 2.2rem 0;
+        padding: 1rem 0;
+      }
+
+      .prose :global(.article-figure figcaption) {
+        color: var(--mid);
+        font-size: 0.74rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        margin-bottom: 0.85rem;
+        text-transform: uppercase;
+      }
+
+      .prose :global(.sketch-figure) {
+        margin-left: 50%;
+        transform: translateX(-50%);
+        width: min(760px, calc(100vw - 1rem));
+      }
+
+      .prose :global(.sketch-figure img) {
+        aspect-ratio: auto 1200 / 800;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        display: block;
+        height: auto;
+        margin: 0;
+        object-fit: contain;
+        width: 100%;
+      }
+
+      .prose :global(.gate-stage) {
+        background: linear-gradient(135deg, #f5efe4, #e7ddcf);
+        border: 1px solid var(--rule);
+        cursor: crosshair;
+        outline: none;
+        overflow: hidden;
+        position: relative;
+        touch-action: manipulation;
+      }
+
+      .prose :global(.gate-stage:focus-visible) {
+        box-shadow: 0 0 0 3px rgba(63, 143, 138, 0.24);
+      }
+
+      .prose :global(.gate-map) {
+        display: block;
+        min-height: 18rem;
+        width: 100%;
+      }
+
+      .prose :global(.gate-map text),
+      .prose :global(.consequence-map text) {
+        fill: var(--mid);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .prose :global(.gate-floor) {
+        fill: url(#gate-floor-gradient);
+      }
+
+      .prose :global(.gate-lane) {
+        fill: none;
+        stroke-linecap: round;
+        stroke-width: 9;
+        opacity: 0.26;
+        transition:
+          opacity 0.2s ease,
+          stroke-width 0.2s ease;
+      }
+
+      .prose :global(.lane-approach) {
+        stroke: rgba(26, 23, 20, 0.28);
+      }
+
+      .prose :global(.lane-plan) {
+        stroke: url(#predict-gradient);
+      }
+
+      .prose :global(.lane-canary) {
+        stroke: url(#contain-gradient);
+      }
+
+      .prose :global(.lane-abort) {
+        stroke: url(#abort-gradient);
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] .lane-plan),
+      .prose :global(.gate-stage[data-route="canary"] .lane-canary),
+      .prose :global(.gate-stage[data-route="abort"] .lane-abort) {
+        opacity: 1;
+        stroke-width: 13;
+      }
+
+      .prose :global(.gate-trail) {
+        fill: none;
+        opacity: 0.8;
+        stroke: var(--teal);
+        stroke-linecap: round;
+        stroke-width: 4;
+      }
+
+      .prose :global(.gate-stage[data-route="canary"] .gate-trail) {
+        stroke: var(--amber);
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] .gate-trail) {
+        stroke: var(--rose);
+      }
+
+      .prose :global(.gate-meter rect:first-of-type),
+      .prose :global(.gate-meter rect:nth-of-type(3)) {
+        fill: rgba(26, 23, 20, 0.1);
+      }
+
+      .prose :global([data-coverage-fill]) {
+        fill: var(--teal);
+        transition: width 0.18s ease;
+      }
+
+      .prose :global([data-blast-fill]) {
+        fill: var(--amber);
+        transition:
+          fill 0.18s ease,
+          width 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] [data-blast-fill]) {
+        fill: var(--rose);
+      }
+
+      .prose :global(.consequence-gate) {
+        transform-box: fill-box;
+        transform-origin: center;
+        transition: transform 0.18s ease;
+      }
+
+      .prose :global(.gate-shadow) {
+        fill: rgba(26, 23, 20, 0.08);
+      }
+
+      .prose :global(.gate-post),
+      .prose :global(.gate-header) {
+        fill: rgba(26, 23, 20, 0.62);
+      }
+
+      .prose :global(.gate-door rect) {
+        fill: rgba(245, 240, 232, 0.96);
+        stroke: rgba(26, 23, 20, 0.42);
+        stroke-width: 2;
+      }
+
+      .prose :global(.gate-door path) {
+        stroke: rgba(26, 23, 20, 0.28);
+        stroke-linecap: round;
+        stroke-width: 2;
+      }
+
+      .prose :global(.gate-door) {
+        transform-box: fill-box;
+        transform-origin: center;
+        transition: transform 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] [data-gate-door-left]) {
+        transform: translateX(-18px) rotate(-8deg);
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] [data-gate-door-right]) {
+        transform: translateX(18px) rotate(8deg);
+      }
+
+      .prose :global(.gate-stage[data-route="canary"] [data-gate-door-left]) {
+        transform: translateX(-7px);
+      }
+
+      .prose :global(.gate-stage[data-route="canary"] [data-gate-door-right]) {
+        transform: translateX(7px);
+      }
+
+      .prose :global(.gate-lock) {
+        opacity: 0;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+        transform: translateY(-6px);
+      }
+
+      .prose :global(.gate-lock path),
+      .prose :global(.gate-lock rect) {
+        fill: rgba(245, 240, 232, 0.94);
+        stroke: rgba(26, 23, 20, 0.58);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3;
+      }
+
+      .prose :global(.gate-lock circle) {
+        fill: rgba(26, 23, 20, 0.58);
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] .gate-lock) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .prose :global(.gate-arm rect) {
+        fill: var(--rose);
+        opacity: 0;
+        transform-box: fill-box;
+        transform-origin: left center;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+        transform: rotate(-16deg);
+      }
+
+      .prose :global(.gate-arm circle) {
+        fill: rgba(26, 23, 20, 0.44);
+        opacity: 0;
+        transition: opacity 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] .gate-arm rect),
+      .prose :global(.gate-stage[data-route="abort"] .gate-arm circle) {
+        opacity: 1;
+        transform: rotate(0deg);
+      }
+
+      .prose :global(.target-prod rect),
+      .prose :global(.target-canary rect),
+      .prose :global(.target-stop rect) {
+        fill: rgba(245, 240, 232, 0.88);
+        stroke: rgba(26, 23, 20, 0.32);
+        stroke-width: 2;
+      }
+
+      .prose :global(.target-prod path),
+      .prose :global(.target-canary path),
+      .prose :global(.target-stop path) {
+        fill: none;
+        stroke: rgba(26, 23, 20, 0.5);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3;
+      }
+
+      .prose :global(.target-prod circle),
+      .prose :global(.target-canary circle) {
+        fill: var(--teal);
+      }
+
+      .prose :global(.target-canary circle) {
+        fill: var(--amber);
+      }
+
+      .prose :global(.target-stop path) {
+        stroke: var(--rose);
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] .target-prod rect),
+      .prose :global(.gate-stage[data-route="canary"] .target-canary rect),
+      .prose :global(.gate-stage[data-route="abort"] .target-stop rect) {
+        stroke-width: 3;
+        filter: drop-shadow(0 0 8px rgba(63, 143, 138, 0.16));
+      }
+
+      .prose :global(.gate-cursor-target path) {
+        fill: rgba(26, 23, 20, 0.1);
+        stroke: rgba(26, 23, 20, 0.24);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+      }
+
+      .prose :global(.gate-pulse) {
+        fill: var(--amber);
+        pointer-events: none;
+        transition:
+          fill 0.18s ease,
+          r 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] .gate-pulse) {
+        fill: var(--teal);
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] .gate-pulse) {
+        fill: var(--rose);
+      }
+
+      .prose :global(.gate-pulse-ring) {
+        fill: none;
+        pointer-events: none;
+        stroke: rgba(201, 123, 58, 0.48);
+        stroke-width: 2;
+        transform-origin: center;
+      }
+
+      .prose :global(.gate-stage[data-route="plan"] .gate-pulse-ring) {
+        stroke: rgba(63, 143, 138, 0.5);
+      }
+
+      .prose :global(.gate-stage[data-route="abort"] .gate-pulse-ring) {
+        stroke: rgba(191, 95, 90, 0.6);
+      }
+
+      .prose :global(.gate-status) {
+        background: rgba(245, 240, 232, 0.82);
+        border-top: 1px solid var(--rule);
+        color: var(--mid);
+        font-size: 0.78rem;
+        line-height: 1.35;
+        margin: 0;
+        padding: 0.65rem 0.8rem;
+      }
+
+      .prose :global(.consequence-stage) {
+        background: linear-gradient(135deg, #f4ede3, #e8dfd2);
+        border: 1px solid var(--rule);
+        cursor: ew-resize;
+        outline: none;
+        overflow: hidden;
+        position: relative;
+        touch-action: manipulation;
+      }
+
+      .prose :global(.consequence-stage:focus-visible) {
+        box-shadow: 0 0 0 3px rgba(201, 123, 58, 0.24);
+      }
+
+      .prose :global(.consequence-map) {
+        display: block;
+        min-height: 17rem;
+        width: 100%;
+      }
+
+      .prose :global(.consequence-track) {
+        fill: none;
+        stroke: rgba(26, 23, 20, 0.18);
+        stroke-linecap: round;
+        stroke-width: 9;
+      }
+
+      .prose :global(.consequence-lane) {
+        opacity: 0.64;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .prose :global(.consequence-stage[data-level="local"] .lane-local),
+      .prose :global(.consequence-stage[data-level="reversible"] .lane-reversible),
+      .prose :global(.consequence-stage[data-level="disruptive"] .lane-disruptive),
+      .prose :global(.consequence-stage[data-level="irreversible"] .lane-irreversible) {
+        opacity: 1;
+        transform: translateY(-3px);
+      }
+
+      .prose :global(.turnstile),
+      .prose :global(.gate-pass),
+      .prose :global(.half-gate),
+      .prose :global(.revert-arrow),
+      .prose :global(.warning-bars),
+      .prose :global(.blast-brace),
+      .prose :global(.blast-lock) {
+        fill: none;
+        stroke: rgba(26, 23, 20, 0.48);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 4;
+      }
+
+      .prose :global(.lane-local .turnstile),
+      .prose :global(.lane-local .gate-pass) {
+        stroke: var(--teal);
+      }
+
+      .prose :global(.lane-reversible .gate-frame),
+      .prose :global(.lane-disruptive .gate-frame),
+      .prose :global(.blast-door) {
+        fill: rgba(245, 240, 232, 0.88);
+        stroke: rgba(26, 23, 20, 0.42);
+        stroke-width: 3;
+      }
+
+      .prose :global(.lane-reversible .half-gate),
+      .prose :global(.lane-reversible .revert-arrow) {
+        stroke: var(--amber);
+      }
+
+      .prose :global(.lane-disruptive .heavy) {
+        stroke: var(--rose);
+      }
+
+      .prose :global(.warning-bars) {
+        stroke: rgba(191, 95, 90, 0.58);
+      }
+
+      .prose :global(.warning-light) {
+        fill: var(--amber);
+      }
+
+      .prose :global(.blast-door) {
+        fill: rgba(191, 95, 90, 0.14);
+        stroke: var(--rose);
+      }
+
+      .prose :global(.blast-lock) {
+        stroke: var(--rose);
+      }
+
+      .prose :global(.consequence-trail) {
+        fill: none;
+        stroke: var(--teal);
+        stroke-linecap: round;
+        stroke-width: 4;
+      }
+
+      .prose :global(.consequence-stage[data-level="reversible"] .consequence-trail) {
+        stroke: var(--amber);
+      }
+
+      .prose :global(.consequence-stage[data-level="disruptive"] .consequence-trail),
+      .prose :global(.consequence-stage[data-level="irreversible"] .consequence-trail) {
+        stroke: var(--rose);
+      }
+
+      .prose :global(.consequence-token) {
+        fill: var(--teal);
+        transition: fill 0.18s ease;
+      }
+
+      .prose :global(.consequence-token-ring) {
+        fill: none;
+        stroke: rgba(63, 143, 138, 0.5);
+        stroke-width: 2;
+      }
+
+      .prose :global(.consequence-stage[data-level="reversible"] .consequence-token) {
+        fill: var(--amber);
+      }
+
+      .prose :global(.consequence-stage[data-level="reversible"] .consequence-token-ring) {
+        stroke: rgba(201, 123, 58, 0.55);
+      }
+
+      .prose :global(.consequence-stage[data-level="disruptive"] .consequence-token),
+      .prose :global(.consequence-stage[data-level="irreversible"] .consequence-token) {
+        fill: var(--rose);
+      }
+
+      .prose :global(.consequence-stage[data-level="disruptive"] .consequence-token-ring),
+      .prose :global(.consequence-stage[data-level="irreversible"] .consequence-token-ring) {
+        stroke: rgba(191, 95, 90, 0.65);
+      }
+
+      .prose :global(.consequence-sparks) {
+        opacity: 0;
+        transition: opacity 0.18s ease;
+      }
+
+      .prose :global(.consequence-sparks path) {
+        stroke: var(--rose);
+        stroke-linecap: round;
+        stroke-width: 4;
+      }
+
+      .prose :global(.consequence-stage[data-level="irreversible"] .consequence-sparks) {
+        opacity: 1;
+      }
+
+      .prose :global(.consequence-status) {
+        background: rgba(245, 240, 232, 0.82);
+        border-top: 1px solid var(--rule);
+        color: var(--mid);
+        font-size: 0.78rem;
+        line-height: 1.35;
+        margin: 0;
+        padding: 0.65rem 0.8rem;
+      }
+
+      .prose :global(.sand-stage) {
+        background: linear-gradient(180deg, #efe8dc, #e9e1d4);
+        border: 1px solid var(--rule);
+        cursor: pointer;
+        min-height: 20rem;
+        overflow: hidden;
+        position: relative;
+        touch-action: manipulation;
+      }
+
+      .prose :global(.sand-stage:focus-visible) {
+        box-shadow: 0 0 0 3px rgba(191, 95, 90, 0.24);
+      }
+
+      .prose :global(.sand-stage canvas) {
+        display: block;
+        height: auto;
+        width: 100%;
+      }
+
+      .prose :global(.sand-hud) {
+        color: rgba(26, 23, 20, 0.62);
+        display: grid;
+        font-size: 0.72rem;
+        font-weight: 500;
+        grid-template-columns: repeat(3, 1fr);
+        left: 0;
+        letter-spacing: 0;
+        padding: 0.65rem 0.75rem;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        text-transform: uppercase;
+        top: 0;
+      }
+
+      .prose :global(.sand-hud span:nth-child(2)) {
+        text-align: center;
+      }
+
+      .prose :global(.sand-hud span:nth-child(3)) {
+        text-align: right;
+      }
+
+      .prose :global(.sand-mode) {
+        align-items: center;
+        background: rgba(245, 240, 232, 0.86);
+        border-top: 1px solid rgba(217, 208, 195, 0.8);
+        bottom: 0;
+        color: var(--mid);
+        display: flex;
+        font-size: 0.68rem;
+        left: 0;
+        min-height: 2rem;
+        opacity: 0.74;
+        padding: 0.2rem 0.65rem;
+        position: absolute;
+        right: 0;
+        text-transform: uppercase;
+      }
+
+      .prose :global(.sandbox-stage) {
+        background: linear-gradient(180deg, #f1eadf, #e7ded0);
+        border: 1px solid var(--rule);
+        cursor: pointer;
+        min-height: 20rem;
+        overflow: hidden;
+        position: relative;
+        touch-action: manipulation;
+      }
+
+      .prose :global(.sandbox-stage:focus-visible) {
+        box-shadow: 0 0 0 3px rgba(63, 143, 138, 0.24);
+      }
+
+      .prose :global(.sandbox-stage canvas) {
+        display: block;
+        height: auto;
+        width: 100%;
+      }
+
+      .prose :global(.sandbox-hud) {
+        color: rgba(26, 23, 20, 0.62);
+        display: grid;
+        font-size: 0.72rem;
+        font-weight: 500;
+        grid-template-columns: repeat(3, 1fr);
+        left: 0;
+        letter-spacing: 0;
+        padding: 0.65rem 0.75rem;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        text-transform: uppercase;
+        top: 0;
+      }
+
+      .prose :global(.sandbox-hud span:nth-child(2)) {
+        text-align: center;
+      }
+
+      .prose :global(.sandbox-hud span:nth-child(3)) {
+        text-align: right;
+      }
+
+      .prose :global(.sandbox-mode) {
+        align-items: center;
+        background: rgba(245, 240, 232, 0.86);
+        border-top: 1px solid rgba(217, 208, 195, 0.8);
+        bottom: 0;
+        color: var(--mid);
+        display: flex;
+        font-size: 0.68rem;
+        left: 0;
+        min-height: 2rem;
+        opacity: 0.74;
+        padding: 0.2rem 0.65rem;
+        position: absolute;
+        right: 0;
+        text-transform: uppercase;
+      }
+
       .prose :global(.footnotes) {
         border-top: 1px solid var(--rule);
         margin-top: 2rem;
@@ -221,12 +857,31 @@ const formatted = date.toLocaleDateString("en-GB", {
         margin-bottom: 0.6rem;
       }
 
+      .prose :global(.footnotes a:not(.data-footnote-backref)) {
+        border-bottom-color: rgba(107, 98, 89, 0.35);
+      }
+
       .prose :global(.footnotes ol) {
         margin-bottom: 0;
       }
 
+      .prose :global(.ref-date) {
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        color: var(--mid);
+        display: inline-block;
+        font-size: 0.68rem;
+        line-height: 1.1;
+        margin-left: 0.25rem;
+        padding: 0.08rem 0.32rem;
+        white-space: nowrap;
+      }
+
       .prose :global(.data-footnote-backref) {
         border-bottom: none;
+        color: var(--faint);
+        font-size: 0.78em;
+        margin-left: 0.1rem;
       }
 
       .prose :global(.sr-only) {
@@ -252,13 +907,1211 @@ const formatted = date.toLocaleDateString("en-GB", {
           font-size: 16px;
         }
         main {
-          padding: 6vh max(1.25rem, env(safe-area-inset-left)) 6vh
-            max(1.25rem, env(safe-area-inset-right));
+          padding: 6vh max(0.5rem, env(safe-area-inset-right)) 6vh
+            max(0.5rem, env(safe-area-inset-left));
         }
         h1 {
           font-size: 1.8rem;
         }
+        .prose :global(.gate-map) {
+          min-height: 13.2rem;
+        }
+        .prose :global(.gate-map text) {
+          font-size: 17px;
+        }
+        .prose :global(.sand-stage) {
+          min-height: 15.8rem;
+        }
+        .prose :global(.sand-mode) {
+          font-size: 0.66rem;
+        }
+        .prose :global(.sandbox-stage) {
+          min-height: 15.8rem;
+        }
+        .prose :global(.sandbox-mode) {
+          font-size: 0.66rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prose :global(.gate-lane),
+        .prose :global(.gate-pulse),
+        .prose :global(.gate-pulse-ring),
+        .prose :global(.consequence-lane),
+        .prose :global(.consequence-token),
+        .prose :global(.consequence-token-ring) {
+          transition: none;
+        }
       }
     </style>
+    <script is:inline>
+      (() => {
+        const reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+        function initGateStage(stage) {
+          const svg = stage.querySelector(".gate-map");
+          if (!svg) return;
+          const pulse = svg.querySelector("[data-gate-pulse]");
+          const pulseRing = svg.querySelector("[data-gate-pulse-ring]");
+          const trail = svg.querySelector("[data-pulse-trail]");
+          const coverageFill = svg?.querySelector("[data-coverage-fill]");
+          const blastFill = svg?.querySelector("[data-blast-fill]");
+          const status = stage.querySelector(".gate-status");
+          const scenarios = [
+            { x: 476, y: 108 },
+            { x: 418, y: 232 },
+            { x: 486, y: 304 },
+          ];
+          const routeEnds = {
+            plan: { x: 548, y: 86 },
+            canary: { x: 538, y: 232 },
+            abort: { x: 540, y: 304 },
+          };
+          let scenarioIndex = 0;
+          let coverage = 0.82;
+          let blast = 0.22;
+          let route = "plan";
+          let targetX = scenarios[0].x;
+          let targetY = scenarios[0].y;
+          let currentX = 86;
+          let currentY = 248;
+          let progress = 0;
+          let pointerActive = false;
+          let last = performance.now();
+          let animationId = 0;
+          let isIntersecting = !("IntersectionObserver" in window);
+          const start = { x: 86, y: 248 };
+
+          const labels = {
+            plan:
+              "Gate open: evidence is high and consequence is bounded, so approval can bind to the exact artifact.",
+            canary:
+              "Gate diverts: uncertainty goes through a canary bay with independent health signals before expansion.",
+            abort:
+              "Gate locked: weak evidence plus high consequence is a different request, not an approval click.",
+          };
+
+          function chooseRoute() {
+            if (blast > 0.7 || (blast > 0.55 && coverage < 0.5)) return "abort";
+            if (coverage > 0.66 && blast < 0.55) return "plan";
+            return "canary";
+          }
+
+          function updateState() {
+            route = chooseRoute();
+            stage.dataset.route = route;
+            if (status) status.textContent = labels[route];
+            coverageFill?.setAttribute("width", `${Math.max(12, coverage * 150)}`);
+            blastFill?.setAttribute("width", `${Math.max(10, blast * 150)}`);
+          }
+
+          function routePoint(amount) {
+            const end = routeEnds[route] || routeEnds.canary;
+            const t = amount % 1;
+            const control =
+              route === "plan"
+                ? { x: 300, y: 118 }
+                : route === "abort"
+                  ? { x: 318, y: 300 }
+                  : { x: 318, y: 226 };
+            const oneMinus = 1 - t;
+            return {
+              x:
+                oneMinus * oneMinus * start.x +
+                2 * oneMinus * t * control.x +
+                t * t * end.x,
+              y:
+                oneMinus * oneMinus * start.y +
+                2 * oneMinus * t * control.y +
+                t * t * end.y,
+            };
+          }
+
+          function placePulse(now = performance.now()) {
+            pulse?.setAttribute("cx", `${currentX}`);
+            pulse?.setAttribute("cy", `${currentY}`);
+            pulseRing?.setAttribute("cx", `${currentX}`);
+            pulseRing?.setAttribute("cy", `${currentY}`);
+            const ringSize =
+              route === "abort"
+                ? 16 + Math.sin(now / 90) * 3
+                : 15 + Math.sin(now / 130) * 2;
+            pulseRing?.setAttribute("r", `${ringSize}`);
+            const controlX = start.x + (currentX - start.x) * 0.5;
+            const controlY =
+              route === "plan"
+                ? Math.min(start.y, currentY) - 52
+                : route === "abort"
+                  ? Math.max(start.y, currentY) + 28
+                  : (start.y + currentY) * 0.5 + 18;
+            trail?.setAttribute(
+              "d",
+              `M${start.x.toFixed(1)} ${start.y.toFixed(1)} Q${controlX.toFixed(1)} ${controlY.toFixed(1)} ${currentX.toFixed(1)} ${currentY.toFixed(1)}`,
+            );
+          }
+
+          function shouldAnimate() {
+            return !reduceMotion && isIntersecting && !document.hidden;
+          }
+
+          function stopFrame() {
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = 0;
+          }
+
+          function scheduleFrame() {
+            if (animationId || !shouldAnimate()) return;
+            last = performance.now();
+            animationId = requestAnimationFrame(frame);
+          }
+
+          function updateFrameState() {
+            if (shouldAnimate()) {
+              scheduleFrame();
+            } else {
+              stopFrame();
+              if (pointerActive) {
+                currentX = targetX;
+                currentY = targetY;
+              } else {
+                const point = routePoint(0.68);
+                currentX = point.x;
+                currentY = point.y;
+              }
+              placePulse();
+            }
+          }
+
+          function setTargetFromPoint(x, y) {
+            targetX = clamp(x, 58, 590);
+            targetY = clamp(y, 78, 312);
+            coverage = clamp((targetX - 80) / 470, 0.05, 0.95);
+            blast = clamp((targetY - 80) / 232, 0.05, 0.95);
+            updateState();
+          }
+
+          function setFromPointer(event) {
+            if (event.pointerType === "touch") return;
+            const rect = stage.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 640;
+            const y = ((event.clientY - rect.top) / rect.height) * 360;
+            pointerActive = true;
+            setTargetFromPoint(x, y);
+            currentX = targetX;
+            currentY = targetY;
+            placePulse();
+            updateFrameState();
+          }
+
+          function cycleScenario() {
+            scenarioIndex = (scenarioIndex + 1) % scenarios.length;
+            pointerActive = false;
+            progress = 0;
+            setTargetFromPoint(scenarios[scenarioIndex].x, scenarios[scenarioIndex].y);
+          }
+
+          stage.addEventListener("pointerenter", setFromPointer);
+          stage.addEventListener("pointermove", setFromPointer);
+          stage.addEventListener("pointerleave", () => {
+            pointerActive = false;
+            progress = 0;
+            updateFrameState();
+          });
+          stage.addEventListener("click", () => {
+            cycleScenario();
+            updateFrameState();
+          });
+          stage.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            cycleScenario();
+            updateFrameState();
+          });
+
+          function frame(now) {
+            animationId = 0;
+            if (!shouldAnimate()) {
+              if (pointerActive) {
+                currentX = targetX;
+                currentY = targetY;
+              } else {
+                const point = routePoint(0.68);
+                currentX = point.x;
+                currentY = point.y;
+              }
+              placePulse(now);
+              return;
+            }
+            const delta = Math.min(48, now - last);
+            last = now;
+            if (pointerActive) {
+              currentX = targetX;
+              currentY = targetY;
+            } else {
+              progress = (progress + delta / 2800) % 1;
+              const point = routePoint(progress);
+              currentX = point.x;
+              currentY = point.y;
+            }
+            placePulse(now);
+            scheduleFrame();
+          }
+
+          updateState();
+          placePulse();
+
+          if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(([entry]) => {
+              isIntersecting = Boolean(entry?.isIntersecting);
+              updateFrameState();
+            });
+            observer.observe(stage);
+          }
+
+          document.addEventListener("visibilitychange", updateFrameState);
+          updateFrameState();
+        }
+
+        function initConsequenceStage(stage) {
+          const svg = stage.querySelector(".consequence-map");
+          if (!svg) return;
+          const token = svg.querySelector("[data-consequence-token]");
+          const ring = svg.querySelector("[data-consequence-ring]");
+          const trail = svg.querySelector("[data-consequence-trail]");
+          const status = stage.querySelector(".consequence-status");
+          const levels = [
+            {
+              key: "local",
+              x: 116,
+              label: "Local action: the token passes through a light gate.",
+            },
+            {
+              key: "reversible",
+              x: 252,
+              label: "Reversible action: the gate half-opens and expects a recovery path.",
+            },
+            {
+              key: "disruptive",
+              x: 396,
+              label: "Disruptive action: warning lights come on and rollout must be contained.",
+            },
+            {
+              key: "irreversible",
+              x: 486,
+              label: "Irreversible action: the blast door stays shut; new approval required.",
+            },
+          ];
+          let levelIndex = 0;
+          let committedLevelIndex = 0;
+          let currentX = 70;
+          let targetX = levels[0].x;
+          let last = performance.now();
+          let animationId = 0;
+          let isIntersecting = !("IntersectionObserver" in window);
+
+          function setLevel(index) {
+            levelIndex = clamp(index, 0, levels.length - 1);
+            const level = levels[levelIndex];
+            stage.dataset.level = level.key;
+            targetX = level.x;
+            if (status) status.textContent = level.label;
+          }
+
+          function setLevelFromPointer(event) {
+            if (event.pointerType === "touch") return;
+            const rect = stage.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 640;
+            const score = clamp((x - 60) / 520, 0, 0.999);
+            setLevel(Math.floor(score * levels.length));
+            updateFrameState();
+          }
+
+          function cycleLevel() {
+            committedLevelIndex = (committedLevelIndex + 1) % levels.length;
+            setLevel(committedLevelIndex);
+            updateFrameState();
+          }
+
+          function placeToken(now = performance.now()) {
+            const y = 232;
+            const pulse = 16 + Math.sin(now / (levelIndex >= 2 ? 76 : 130)) * (levelIndex >= 2 ? 4 : 2);
+            token?.setAttribute("cx", `${currentX.toFixed(1)}`);
+            token?.setAttribute("cy", `${y}`);
+            ring?.setAttribute("cx", `${currentX.toFixed(1)}`);
+            ring?.setAttribute("cy", `${y}`);
+            ring?.setAttribute("r", `${pulse.toFixed(1)}`);
+            trail?.setAttribute("d", `M48 232 H${currentX.toFixed(1)}`);
+          }
+
+          function shouldAnimate() {
+            return !reduceMotion && isIntersecting && !document.hidden;
+          }
+
+          function stopFrame() {
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = 0;
+          }
+
+          function scheduleFrame() {
+            if (animationId || !shouldAnimate()) return;
+            last = performance.now();
+            animationId = requestAnimationFrame(frame);
+          }
+
+          function updateFrameState() {
+            if (shouldAnimate()) {
+              scheduleFrame();
+            } else {
+              stopFrame();
+              currentX = targetX;
+              placeToken();
+            }
+          }
+
+          function frame(now) {
+            animationId = 0;
+            if (!shouldAnimate()) {
+              currentX = targetX;
+              placeToken(now);
+              return;
+            }
+            const delta = Math.min(48, now - last);
+            last = now;
+            const pull = clamp(delta / 130, 0.1, 0.3);
+            currentX += (targetX - currentX) * pull;
+            placeToken(now);
+            scheduleFrame();
+          }
+
+          stage.addEventListener("pointermove", setLevelFromPointer);
+          stage.addEventListener("pointerleave", () => {
+            setLevel(committedLevelIndex);
+            updateFrameState();
+          });
+          stage.addEventListener("click", () => {
+            cycleLevel();
+          });
+          stage.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            cycleLevel();
+          });
+
+          setLevel(0);
+          placeToken();
+
+          if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(([entry]) => {
+              isIntersecting = Boolean(entry?.isIntersecting);
+              updateFrameState();
+            });
+            observer.observe(stage);
+          }
+
+          document.addEventListener("visibilitychange", updateFrameState);
+          updateFrameState();
+        }
+
+        function initSandStage(stage) {
+          const canvas = stage.querySelector("canvas");
+          const ctx = canvas?.getContext("2d");
+          const modeLabel = stage.querySelector(".sand-mode");
+          if (!canvas || !ctx) return;
+
+          const world = { width: 540, height: 360 };
+          let mode = "self";
+          let particles = [];
+          let pointer = null;
+          let caught = 0;
+          let impact = 0;
+          let last = performance.now();
+          let animationId = 0;
+          let isIntersecting = !("IntersectionObserver" in window);
+
+          function resize() {
+            const rect = stage.getBoundingClientRect();
+            const width = Math.max(320, rect.width);
+            const height = width * (world.height / world.width);
+            const scale = window.devicePixelRatio || 1;
+            canvas.style.height = `${height}px`;
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            ctx.setTransform(
+              canvas.width / world.width,
+              0,
+              0,
+              canvas.height / world.height,
+              0,
+              0,
+            );
+          }
+
+          function roundedRect(x, y, width, height, radius) {
+            const r = Math.min(radius, width / 2, height / 2);
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + width - r, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+            ctx.lineTo(x + width, y + height - r);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+            ctx.lineTo(x + r, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+          }
+
+          function makeParticle(seed = 0) {
+            const spread = Math.sin(seed * 9.17) * 0.5 + 0.5;
+            const bad = Math.random() < (mode === "self" ? 0.62 : 0.5);
+            return {
+              bad,
+              x: 92 + spread * 52,
+              y: 86 + Math.random() * 38,
+              vx: (mode === "self" ? 2.0 : 1.35) + Math.random() * 1.05,
+              vy: 0.14 + Math.random() * 0.72,
+              r: 2.1 + Math.random() * 2.2,
+              life: 0,
+              color: bad
+                ? `rgba(${176 + Math.random() * 46}, ${54 + Math.random() * 30}, ${46 + Math.random() * 28}, 0.9)`
+                : `rgba(${62 + Math.random() * 34}, ${132 + Math.random() * 38}, ${122 + Math.random() * 34}, 0.86)`,
+            };
+          }
+
+          function seedParticles() {
+            particles = [];
+            for (let i = 0; i < 76; i += 1) {
+              const particle = makeParticle(i);
+              particle.x += Math.random() * 150;
+              particle.y += Math.random() * 112;
+              particles.push(particle);
+            }
+            if (mode === "self") {
+              for (let i = 0; i < 32; i += 1) {
+                particles.push({
+                  bad: true,
+                  x: 388 + Math.random() * 82,
+                  y: 190 + Math.random() * 72,
+                  vx: -0.18 + Math.random() * 0.32,
+                  vy: -0.08 + Math.random() * 0.24,
+                  r: 2.4 + Math.random() * 2.4,
+                  life: 40 + Math.random() * 80,
+                  color: `rgba(${182 + Math.random() * 36}, ${48 + Math.random() * 26}, ${42 + Math.random() * 22}, 0.9)`,
+                });
+              }
+            } else {
+              for (let i = 0; i < 26; i += 1) {
+                particles.push({
+                  bad: true,
+                  x: 198 + Math.random() * 72,
+                  y: 222 + Math.random() * 62,
+                  vx: -0.4 + Math.random() * 0.32,
+                  vy: -0.14 + Math.random() * 0.3,
+                  r: 2.2 + Math.random() * 2,
+                  life: 30 + Math.random() * 70,
+                  color: `rgba(${176 + Math.random() * 36}, ${54 + Math.random() * 28}, ${46 + Math.random() * 22}, 0.82)`,
+                });
+              }
+            }
+          }
+
+          function setMode(next) {
+            mode = next;
+            stage.dataset.mode = mode;
+            if (modeLabel) {
+              modeLabel.textContent =
+                mode === "self"
+                  ? "self-graded: unsupported claims hit production"
+                  : "independent evidence: bad grains are trapped before execution";
+            }
+            seedParticles();
+            caught = mode === "independent" ? 26 : 0;
+            impact = mode === "self" ? 36 : 0;
+            last = performance.now();
+          }
+
+          function shouldAnimate() {
+            return !reduceMotion && isIntersecting && !document.hidden;
+          }
+
+          function stopFrame() {
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = 0;
+          }
+
+          function scheduleFrame() {
+            if (animationId || !shouldAnimate()) return;
+            last = performance.now();
+            animationId = requestAnimationFrame(draw);
+          }
+
+          function updateFrameState() {
+            if (shouldAnimate()) {
+              scheduleFrame();
+            } else {
+              stopFrame();
+              draw(performance.now(), false);
+            }
+          }
+
+          function spawn() {
+            const limit = mode === "self" ? 260 : 210;
+            const count = mode === "self" ? 8 : 5;
+            for (let i = 0; i < count && particles.length < limit; i += 1) {
+              particles.push(makeParticle(performance.now() + i));
+            }
+          }
+
+          function repelFromPointer(particle) {
+            if (!pointer) return;
+            const dx = particle.x - pointer.x;
+            const dy = particle.y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance > 42 || distance < 1) return;
+            const force = (42 - distance) / 42;
+            particle.vx += (dx / distance) * force * 1.2;
+            particle.vy += (dy / distance) * force * 1.2;
+          }
+
+          function collideGate(particle, previousX) {
+            if (mode === "self") {
+              const sieveX = 278;
+              const insideTornSieve =
+                previousX < sieveX &&
+                particle.x >= sieveX &&
+                particle.y > 88 &&
+                particle.y < 270;
+              if (insideTornSieve) {
+                particle.vx += particle.bad ? 1.15 : 0.46;
+                particle.vy *= 0.68;
+              }
+              if (particle.bad && particle.x > 372 && particle.y > 138) {
+                particle.color = "rgba(183, 54, 46, 0.9)";
+              }
+              return;
+            }
+
+            const sieveX = 278;
+            const crossedSieve =
+              previousX < sieveX &&
+              particle.x >= sieveX &&
+              particle.y > 82 &&
+              particle.y < 274;
+            if (crossedSieve && particle.bad) {
+              particle.x = sieveX - particle.r - 0.4;
+              particle.vx = -Math.abs(particle.vx) * (particle.bad ? 0.64 : 0.44);
+              particle.vy *= 0.58;
+              caught += 0.9;
+              particle.color = "rgba(189, 64, 54, 0.86)";
+            }
+            if (crossedSieve && !particle.bad) {
+              particle.vx += 0.42;
+            }
+          }
+
+          function step() {
+            spawn();
+            caught *= 0.994;
+            for (const particle of particles) {
+              const previousX = particle.x;
+              particle.life += 1;
+              particle.vy += mode === "self" ? 0.092 : 0.1;
+              particle.vx += mode === "self" ? 0.026 : 0.004;
+              if (mode === "self" && particle.bad && particle.x > 278) {
+                particle.vx += 0.035;
+                particle.vy += (226 - particle.y) * 0.0026;
+              }
+              if (mode === "independent" && !particle.bad && particle.x > 278) {
+                particle.vx += 0.018;
+                particle.vy += (206 - particle.y) * 0.0018;
+              }
+              particle.vx = clamp(particle.vx, -4.4, 4.8);
+              particle.vy = clamp(particle.vy, -3.8, 4.8);
+              repelFromPointer(particle);
+              particle.x += particle.vx;
+              particle.y += particle.vy;
+              collideGate(particle, previousX);
+
+              if (particle.x < particle.r) {
+                particle.x = particle.r;
+                particle.vx = Math.abs(particle.vx) * 0.5;
+              }
+              if (particle.x > world.width - particle.r) {
+                particle.x = world.width - particle.r;
+                particle.vx = -Math.abs(particle.vx) * 0.45;
+              }
+              if (particle.y > world.height - 24 - particle.r) {
+                particle.y = world.height - 24 - particle.r;
+                particle.vy = -Math.abs(particle.vy) * 0.22;
+                particle.vx *= 0.86;
+              }
+            }
+
+            const badInExecution = particles.filter(
+              (particle) =>
+                particle.bad &&
+                particle.x > 380 &&
+                particle.x < 510 &&
+                particle.y > 142 &&
+                particle.y < 292,
+            ).length;
+            impact = impact * 0.92 + badInExecution * 0.08;
+
+            particles = particles.filter((particle) => {
+              const settledTooLong =
+                particle.life > 180 && particle.y > world.height - 34;
+              return particle.y < world.height + 42 && !settledTooLong;
+            });
+          }
+
+          function drawHopper() {
+            ctx.save();
+            ctx.translate(46, 66);
+            ctx.rotate(-0.08);
+            ctx.fillStyle = "rgba(245, 240, 232, 0.88)";
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
+            ctx.lineWidth = 2.4;
+            ctx.beginPath();
+            roundedRect(0, 0, 108, 74, 6);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "rgba(26, 23, 20, 0.14)";
+            ctx.beginPath();
+            roundedRect(34, -8, 38, 15, 5);
+            ctx.fill();
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.18)";
+            ctx.lineWidth = 2;
+            for (let y = 22; y < 60; y += 13) {
+              ctx.beginPath();
+              ctx.moveTo(18, y);
+              ctx.lineTo(88, y);
+              ctx.stroke();
+            }
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.24)";
+            ctx.beginPath();
+            ctx.moveTo(86, 60);
+            ctx.lineTo(132, 92);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          function drawBasin() {
+            const spill = clamp(impact / 58, 0, 1);
+            ctx.save();
+            ctx.fillStyle = "rgba(245, 240, 232, 0.86)";
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            roundedRect(382, 108, 112, 174, 10);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "rgba(26, 23, 20, 0.08)";
+            for (let y = 128; y < 238; y += 26) {
+              ctx.beginPath();
+              roundedRect(396, y, 84, 16, 4);
+              ctx.fill();
+            }
+            ctx.fillStyle = mode === "self" ? "rgba(191, 95, 90, 0.9)" : "rgba(63, 143, 138, 0.8)";
+            ctx.beginPath();
+            ctx.arc(470, 118, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.32)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(438, 258, 22, Math.PI, Math.PI * 2);
+            ctx.stroke();
+            ctx.strokeStyle = mode === "self" ? "rgba(191, 95, 90, 0.72)" : "rgba(63, 143, 138, 0.72)";
+            ctx.beginPath();
+            ctx.moveTo(418, 258);
+            ctx.lineTo(mode === "self" ? 456 : 432, mode === "self" ? 230 - spill * 18 : 246);
+            ctx.stroke();
+            if (spill > 0.04) {
+              const alpha = clamp(0.1 + spill * 0.42, 0.1, 0.52);
+              ctx.fillStyle = `rgba(191, 95, 90, ${alpha})`;
+              ctx.beginPath();
+              roundedRect(384, 196 - spill * 18, 108, 78 + spill * 24, 12);
+              ctx.fill();
+              ctx.strokeStyle = `rgba(191, 95, 90, ${alpha + 0.14})`;
+              ctx.lineWidth = 3;
+              ctx.beginPath();
+              ctx.moveTo(404, 274);
+              ctx.bezierCurveTo(426, 294, 466, 292, 486, 270);
+              ctx.stroke();
+            }
+            ctx.restore();
+          }
+
+          function drawGate() {
+            ctx.save();
+            ctx.lineCap = "round";
+            ctx.lineWidth = 4;
+            ctx.fillStyle = "rgba(245, 240, 232, 0.74)";
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
+            ctx.beginPath();
+            roundedRect(238, 76, 82, 208, 9);
+            ctx.fill();
+            ctx.stroke();
+            if (mode === "self") {
+              ctx.strokeStyle = "rgba(191, 95, 90, 0.68)";
+              ctx.lineWidth = 4;
+              for (let y = 96; y < 262; y += 30) {
+                ctx.beginPath();
+                ctx.moveTo(250, y);
+                ctx.lineTo(306, y + 18);
+                ctx.stroke();
+              }
+              ctx.strokeStyle = "rgba(191, 95, 90, 0.88)";
+              ctx.setLineDash([12, 9]);
+              ctx.beginPath();
+              ctx.moveTo(270, 88);
+              ctx.lineTo(292, 134);
+              ctx.lineTo(266, 170);
+              ctx.lineTo(300, 224);
+              ctx.lineTo(278, 270);
+              ctx.stroke();
+              ctx.setLineDash([]);
+              ctx.fillStyle = "rgba(191, 95, 90, 0.1)";
+              ctx.beginPath();
+              roundedRect(282, 104, 28, 154, 8);
+              ctx.fill();
+            } else {
+              ctx.strokeStyle = "rgba(63, 143, 138, 0.82)";
+              ctx.lineWidth = 3;
+              for (let y = 92; y < 270; y += 18) {
+                ctx.beginPath();
+                ctx.moveTo(250, y);
+                ctx.lineTo(308, y + 12);
+                ctx.stroke();
+              }
+              for (let x = 252; x < 308; x += 14) {
+                ctx.beginPath();
+                ctx.moveTo(x, 88);
+                ctx.lineTo(x + 18, 268);
+                ctx.stroke();
+              }
+              ctx.fillStyle = "rgba(63, 143, 138, 0.14)";
+              ctx.beginPath();
+              roundedRect(186, 244, 92 + clamp(caught, 0, 46), 30, 8);
+              ctx.fill();
+              ctx.strokeStyle = "rgba(191, 95, 90, 0.48)";
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.moveTo(190, 244);
+              ctx.lineTo(274, 244);
+              ctx.stroke();
+            }
+            ctx.restore();
+          }
+
+          function draw(now, forceStatic = false) {
+            animationId = 0;
+            const animate = !forceStatic && shouldAnimate();
+            const delta = Math.min(64, now - last);
+            last = now;
+            if (animate) {
+              const steps = Math.max(1, Math.round(delta / 16));
+              for (let i = 0; i < steps; i += 1) step();
+            }
+
+            ctx.clearRect(0, 0, world.width, world.height);
+            const shake =
+              animate && mode === "self" && impact > 24
+                ? Math.sin(now / 34) * clamp(impact / 34, 0, 2.6)
+                : 0;
+            ctx.save();
+            ctx.translate(shake, 0);
+            ctx.fillStyle = "#eee8de";
+            ctx.fillRect(0, 0, world.width, world.height);
+
+            drawHopper();
+            drawBasin();
+            drawGate();
+
+            for (const particle of particles) {
+              ctx.fillStyle = particle.color;
+              ctx.beginPath();
+              ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            if (mode === "self" && impact > 24) {
+              ctx.save();
+              ctx.strokeStyle = `rgba(191, 95, 90, ${clamp(impact / 68, 0.24, 0.82)})`;
+              ctx.lineWidth = 3;
+              for (let i = 0; i < 3; i += 1) {
+                ctx.beginPath();
+                ctx.arc(
+                  438,
+                  198,
+                  34 + ((impact * 1.8 + i * 20) % 64),
+                  0.2,
+                  Math.PI * 1.62,
+                );
+                ctx.stroke();
+              }
+              ctx.restore();
+            }
+
+            ctx.restore();
+            if (animate) scheduleFrame();
+          }
+
+          function pointerToWorld(event) {
+            const rect = canvas.getBoundingClientRect();
+            pointer = {
+              x: ((event.clientX - rect.left) / rect.width) * world.width,
+              y: ((event.clientY - rect.top) / rect.height) * world.height,
+            };
+          }
+
+          stage.addEventListener("pointermove", pointerToWorld);
+          stage.addEventListener("pointerleave", () => {
+            pointer = null;
+          });
+          stage.addEventListener("click", () => {
+            stopFrame();
+            setMode(mode === "self" ? "independent" : "self");
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+          stage.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            stopFrame();
+            setMode(mode === "self" ? "independent" : "self");
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+
+          resize();
+          setMode("self");
+          draw(performance.now(), true);
+          window.addEventListener("resize", () => {
+            stopFrame();
+            resize();
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+
+          if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(([entry]) => {
+              isIntersecting = Boolean(entry?.isIntersecting);
+              updateFrameState();
+            });
+            observer.observe(stage);
+          }
+
+          document.addEventListener("visibilitychange", updateFrameState);
+          updateFrameState();
+        }
+
+        function initSandboxStage(stage) {
+          const canvas = stage.querySelector("canvas");
+          const ctx = canvas?.getContext("2d");
+          const modeLabel = stage.querySelector(".sandbox-mode");
+          if (!canvas || !ctx) return;
+
+          const world = { width: 540, height: 360 };
+          const box = { x: 88, y: 70, width: 330, height: 214 };
+          const agent = { x: 226, y: 142, vx: 1.8, vy: 1.25, r: 13 };
+          let particles = [];
+          let bump = 0;
+          let last = performance.now();
+          let animationId = 0;
+          let isIntersecting = !("IntersectionObserver" in window);
+
+          function resize() {
+            const rect = stage.getBoundingClientRect();
+            const width = Math.max(320, rect.width);
+            const height = width * (world.height / world.width);
+            const scale = window.devicePixelRatio || 1;
+            canvas.style.height = `${height}px`;
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            ctx.setTransform(
+              canvas.width / world.width,
+              0,
+              0,
+              canvas.height / world.height,
+              0,
+              0,
+            );
+          }
+
+          function roundedRect(x, y, width, height, radius) {
+            const r = Math.min(radius, width / 2, height / 2);
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + width - r, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+            ctx.lineTo(x + width, y + height - r);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+            ctx.lineTo(x + r, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+          }
+
+          function seedParticles() {
+            particles = [];
+            for (let i = 0; i < 130; i += 1) {
+              particles.push({
+                x: box.x + 20 + Math.random() * (box.width - 40),
+                y: box.y + box.height - 42 - Math.random() * 56,
+                vx: -0.18 + Math.random() * 0.36,
+                vy: -0.18 + Math.random() * 0.2,
+                r: 1.7 + Math.random() * 2.1,
+                color:
+                  Math.random() > 0.72
+                    ? "rgba(201, 123, 58, 0.78)"
+                    : "rgba(63, 143, 138, 0.72)",
+              });
+            }
+          }
+
+          function nudgeAgent(strength = 1) {
+            agent.vx += (-1.7 + Math.random() * 3.4) * strength;
+            agent.vy += (-1.2 + Math.random() * 2.4) * strength;
+            bump = Math.max(bump, 12 * strength);
+            if (modeLabel) {
+              modeLabel.textContent = "contained exploration: bumps move state inside the box";
+            }
+          }
+
+          function shouldAnimate() {
+            return !reduceMotion && isIntersecting && !document.hidden;
+          }
+
+          function stopFrame() {
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = 0;
+          }
+
+          function scheduleFrame() {
+            if (animationId || !shouldAnimate()) return;
+            last = performance.now();
+            animationId = requestAnimationFrame(draw);
+          }
+
+          function updateFrameState() {
+            if (shouldAnimate()) {
+              scheduleFrame();
+            } else {
+              stopFrame();
+              draw(performance.now(), true);
+            }
+          }
+
+          function step() {
+            agent.x += agent.vx;
+            agent.y += agent.vy;
+            agent.vx += Math.sin(performance.now() / 760) * 0.018;
+            agent.vy += Math.cos(performance.now() / 910) * 0.016;
+            agent.vx = clamp(agent.vx, -3.2, 3.2);
+            agent.vy = clamp(agent.vy, -2.7, 2.7);
+
+            const minX = box.x + agent.r + 10;
+            const maxX = box.x + box.width - agent.r - 10;
+            const minY = box.y + agent.r + 10;
+            const maxY = box.y + box.height - agent.r - 20;
+            if (agent.x < minX || agent.x > maxX) {
+              agent.x = clamp(agent.x, minX, maxX);
+              agent.vx *= -0.92;
+              bump = 14;
+            }
+            if (agent.y < minY || agent.y > maxY) {
+              agent.y = clamp(agent.y, minY, maxY);
+              agent.vy *= -0.92;
+              bump = 14;
+            }
+
+            for (const particle of particles) {
+              const dx = particle.x - agent.x;
+              const dy = particle.y - agent.y;
+              const distance = Math.hypot(dx, dy);
+              if (distance < 44 && distance > 0.1) {
+                const force = (44 - distance) / 44;
+                particle.vx += (dx / distance) * force * 0.42;
+                particle.vy += (dy / distance) * force * 0.32;
+              }
+              if (bump > 1) {
+                particle.vx += Math.sin((particle.y + bump) * 0.08) * 0.018 * bump;
+                particle.vy -= 0.012 * bump;
+              }
+              particle.vy += 0.055;
+              particle.vx *= 0.985;
+              particle.vy *= 0.988;
+              particle.x += particle.vx;
+              particle.y += particle.vy;
+
+              const floor = box.y + box.height - particle.r - 18;
+              if (particle.x < box.x + particle.r + 12) {
+                particle.x = box.x + particle.r + 12;
+                particle.vx = Math.abs(particle.vx) * 0.48;
+              }
+              if (particle.x > box.x + box.width - particle.r - 12) {
+                particle.x = box.x + box.width - particle.r - 12;
+                particle.vx = -Math.abs(particle.vx) * 0.48;
+              }
+              if (particle.y > floor) {
+                particle.y = floor;
+                particle.vy = -Math.abs(particle.vy) * 0.18;
+                particle.vx *= 0.82;
+              }
+              if (particle.y < box.y + particle.r + 12) {
+                particle.y = box.y + particle.r + 12;
+                particle.vy = Math.abs(particle.vy) * 0.42;
+              }
+            }
+            bump *= 0.9;
+          }
+
+          function drawProductionPanel() {
+            ctx.save();
+            ctx.fillStyle = "rgba(245, 240, 232, 0.64)";
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.18)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            roundedRect(446, 112, 54, 120, 8);
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.22)";
+            for (let y = 134; y < 210; y += 22) {
+              ctx.beginPath();
+              ctx.moveTo(458, y);
+              ctx.lineTo(488, y);
+              ctx.stroke();
+            }
+            ctx.fillStyle = "rgba(63, 143, 138, 0.56)";
+            ctx.beginPath();
+            ctx.arc(488, 122, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          function drawGlassBox(shake) {
+            ctx.save();
+            ctx.translate(shake, 0);
+            ctx.fillStyle = "rgba(170, 209, 210, 0.16)";
+            ctx.strokeStyle = "rgba(63, 143, 138, 0.62)";
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            roundedRect(box.x, box.y, box.width, box.height, 12);
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(245, 240, 232, 0.8)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(box.x + 22, box.y + 18);
+            ctx.lineTo(box.x + box.width - 34, box.y + 18);
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(63, 143, 138, 0.28)";
+            ctx.setLineDash([7, 8]);
+            ctx.beginPath();
+            ctx.moveTo(box.x + box.width + 18, box.y + 18);
+            ctx.lineTo(box.x + box.width + 18, box.y + box.height - 18);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+          }
+
+          function drawAgent(shake) {
+            ctx.save();
+            ctx.translate(shake, 0);
+            ctx.fillStyle = "rgba(26, 23, 20, 0.82)";
+            ctx.beginPath();
+            ctx.arc(agent.x, agent.y, agent.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "rgba(245, 240, 232, 0.94)";
+            ctx.beginPath();
+            ctx.arc(agent.x - 4, agent.y - 2, 2.2, 0, Math.PI * 2);
+            ctx.arc(agent.x + 4, agent.y - 2, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "rgba(26, 23, 20, 0.82)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(agent.x, agent.y - agent.r);
+            ctx.lineTo(agent.x + 8, agent.y - agent.r - 10);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          function draw(now, forceStatic = false) {
+            animationId = 0;
+            const animate = !forceStatic && shouldAnimate();
+            const delta = Math.min(64, now - last);
+            last = now;
+            if (animate) {
+              const steps = Math.max(1, Math.round(delta / 16));
+              for (let i = 0; i < steps; i += 1) step();
+            }
+
+            ctx.clearRect(0, 0, world.width, world.height);
+            ctx.fillStyle = "#eee8de";
+            ctx.fillRect(0, 0, world.width, world.height);
+            drawProductionPanel();
+            const shake = Math.sin(now / 28) * clamp(bump / 6, 0, 2.4);
+            drawGlassBox(shake);
+            ctx.save();
+            ctx.translate(shake, 0);
+            for (const particle of particles) {
+              ctx.fillStyle = particle.color;
+              ctx.beginPath();
+              ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.restore();
+            drawAgent(shake);
+            if (animate) scheduleFrame();
+          }
+
+          stage.addEventListener("click", () => {
+            stopFrame();
+            nudgeAgent(1.2);
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+          stage.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            stopFrame();
+            nudgeAgent(1.2);
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+
+          resize();
+          seedParticles();
+          draw(performance.now(), true);
+          window.addEventListener("resize", () => {
+            stopFrame();
+            resize();
+            draw(performance.now(), true);
+            updateFrameState();
+          });
+
+          if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(([entry]) => {
+              isIntersecting = Boolean(entry?.isIntersecting);
+              updateFrameState();
+            });
+            observer.observe(stage);
+          }
+
+          document.addEventListener("visibilitychange", updateFrameState);
+          updateFrameState();
+        }
+
+        document.querySelectorAll("[data-gate-stage]").forEach(initGateStage);
+        document
+          .querySelectorAll("[data-consequence-stage]")
+          .forEach(initConsequenceStage);
+        document.querySelectorAll("[data-sand-stage]").forEach(initSandStage);
+        document
+          .querySelectorAll("[data-sandbox-stage]")
+          .forEach(initSandboxStage);
+      })();
+    </script>
   </body>
 </html>
