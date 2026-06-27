@@ -86,7 +86,7 @@ const formatted = date.toLocaleDateString("en-GB", {
       }
 
       main {
-        max-width: 540px;
+        max-width: 648px;
         margin: 0 auto;
         padding: 8vh clamp(0.5rem, 2vw, 0.8rem) 8vh;
       }
@@ -151,6 +151,12 @@ const formatted = date.toLocaleDateString("en-GB", {
 
       .prose {
         overflow-wrap: break-word;
+      }
+
+      .prose::after {
+        clear: both;
+        content: "";
+        display: block;
       }
 
       .prose :global(a) {
@@ -900,6 +906,64 @@ const formatted = date.toLocaleDateString("en-GB", {
         max-width: 100%;
         border-radius: 6px;
         margin: 1.5rem 0;
+      }
+
+      @media (min-width: 1120px) {
+        main {
+          max-width: min(1120px, calc(100vw - 4rem));
+          padding-left: clamp(1rem, 3vw, 2rem);
+          padding-right: clamp(1rem, 3vw, 2rem);
+        }
+
+        .back,
+        article header {
+          max-width: 648px;
+        }
+
+        .prose {
+          --reader-width: 648px;
+          --aside-gap: 2rem;
+          --aside-width: clamp(360px, 36vw, 440px);
+        }
+
+        .prose :global(p),
+        .prose :global(h2),
+        .prose :global(h3),
+        .prose :global(ul),
+        .prose :global(ol),
+        .prose :global(blockquote),
+        .prose :global(pre),
+        .prose :global(hr),
+        .prose :global(.footnotes) {
+          max-width: var(--reader-width);
+        }
+
+        .prose :global(.article-figure) {
+          clear: right;
+          float: right;
+          margin: 0.25rem 0 1.5rem var(--aside-gap);
+          padding: 0.85rem 0;
+          width: var(--aside-width);
+        }
+
+        .prose :global(.sketch-figure) {
+          margin-left: var(--aside-gap);
+          transform: none;
+          width: clamp(420px, 39vw, 520px);
+        }
+
+        .prose :global(.gate-map) {
+          min-height: 15.5rem;
+        }
+
+        .prose :global(.sand-stage),
+        .prose :global(.sandbox-stage) {
+          min-height: 17rem;
+        }
+
+        .prose :global(.footnotes) {
+          clear: both;
+        }
       }
 
       @media (max-width: 480px) {
