@@ -276,7 +276,10 @@ const formatted = date.toLocaleDateString("en-GB", {
       }
 
       .prose :global(.gate-stage) {
-        background: linear-gradient(135deg, #f5efe4, #e7ddcf);
+        background:
+          radial-gradient(circle at 48% 52%, rgba(63, 143, 138, 0.1), transparent 33%),
+          radial-gradient(circle at 88% 74%, rgba(191, 95, 90, 0.11), transparent 30%),
+          linear-gradient(135deg, #f6efe4, #e7ddcf);
         border: 1px solid var(--rule);
         cursor: crosshair;
         outline: none;
@@ -304,222 +307,220 @@ const formatted = date.toLocaleDateString("en-GB", {
         text-transform: uppercase;
       }
 
-      .prose :global(.gate-floor) {
-        fill: url(#gate-floor-gradient);
+      .prose :global(.gate-panel) {
+        fill: rgba(247, 241, 232, 0.5);
+        stroke: rgba(217, 208, 195, 0.72);
+        stroke-width: 1;
       }
 
-      .prose :global(.gate-lane) {
+      .prose :global(.gate-grid) {
         fill: none;
+        opacity: 0.35;
+        stroke: rgba(26, 23, 20, 0.08);
+        stroke-dasharray: 5 8;
         stroke-linecap: round;
-        stroke-width: 9;
-        opacity: 0.26;
-        transition:
-          opacity 0.2s ease,
-          stroke-width 0.2s ease;
+        stroke-width: 1.4;
       }
 
-      .prose :global(.lane-approach) {
-        stroke: rgba(26, 23, 20, 0.28);
+      .prose :global(.gate-meter text) {
+        font-size: 12px;
+        letter-spacing: 0;
       }
 
-      .prose :global(.lane-plan) {
-        stroke: url(#predict-gradient);
+      .prose :global(.gate-meter .meter-rail) {
+        fill: rgba(26, 23, 20, 0.12);
       }
 
-      .prose :global(.lane-canary) {
-        stroke: url(#contain-gradient);
-      }
-
-      .prose :global(.lane-abort) {
-        stroke: url(#abort-gradient);
-      }
-
-      .prose :global(.gate-stage[data-route="plan"] .lane-plan),
-      .prose :global(.gate-stage[data-route="canary"] .lane-canary),
-      .prose :global(.gate-stage[data-route="abort"] .lane-abort) {
-        opacity: 1;
-        stroke-width: 13;
-      }
-
-      .prose :global(.gate-trail) {
-        fill: none;
-        opacity: 0.8;
-        stroke: var(--teal);
-        stroke-linecap: round;
-        stroke-width: 4;
-      }
-
-      .prose :global(.gate-stage[data-route="canary"] .gate-trail) {
-        stroke: var(--amber);
-      }
-
-      .prose :global(.gate-stage[data-route="abort"] .gate-trail) {
-        stroke: var(--rose);
-      }
-
-      .prose :global(.gate-meter rect:first-of-type),
-      .prose :global(.gate-meter rect:nth-of-type(3)) {
-        fill: rgba(26, 23, 20, 0.1);
+      .prose :global([data-coverage-fill]),
+      .prose :global([data-blast-fill]) {
+        transition: width 0.18s ease;
       }
 
       .prose :global([data-coverage-fill]) {
         fill: var(--teal);
-        transition: width 0.18s ease;
       }
 
       .prose :global([data-blast-fill]) {
         fill: var(--amber);
-        transition:
-          fill 0.18s ease,
-          width 0.18s ease;
       }
 
-      .prose :global(.gate-stage[data-route="abort"] [data-blast-fill]) {
+      .prose :global(.gate-stage[data-route="stop"] [data-blast-fill]) {
         fill: var(--rose);
       }
 
-      .prose :global(.consequence-gate) {
-        transform-box: fill-box;
-        transform-origin: center;
-        transition: transform 0.18s ease;
-      }
-
-      .prose :global(.gate-shadow) {
-        fill: rgba(26, 23, 20, 0.08);
-      }
-
-      .prose :global(.gate-post),
-      .prose :global(.gate-header) {
-        fill: rgba(26, 23, 20, 0.62);
-      }
-
-      .prose :global(.gate-door rect) {
-        fill: rgba(245, 240, 232, 0.96);
-        stroke: rgba(26, 23, 20, 0.42);
-        stroke-width: 2;
-      }
-
-      .prose :global(.gate-door path) {
-        stroke: rgba(26, 23, 20, 0.28);
-        stroke-linecap: round;
-        stroke-width: 2;
-      }
-
-      .prose :global(.gate-door) {
-        transform-box: fill-box;
-        transform-origin: center;
-        transition: transform 0.18s ease;
-      }
-
-      .prose :global(.gate-stage[data-route="plan"] [data-gate-door-left]) {
-        transform: translateX(-18px) rotate(-8deg);
-      }
-
-      .prose :global(.gate-stage[data-route="plan"] [data-gate-door-right]) {
-        transform: translateX(18px) rotate(8deg);
-      }
-
-      .prose :global(.gate-stage[data-route="canary"] [data-gate-door-left]) {
-        transform: translateX(-7px);
-      }
-
-      .prose :global(.gate-stage[data-route="canary"] [data-gate-door-right]) {
-        transform: translateX(7px);
-      }
-
-      .prose :global(.gate-lock) {
-        opacity: 0;
-        transition:
-          opacity 0.18s ease,
-          transform 0.18s ease;
-        transform: translateY(-6px);
-      }
-
-      .prose :global(.gate-lock path),
-      .prose :global(.gate-lock rect) {
-        fill: rgba(245, 240, 232, 0.94);
-        stroke: rgba(26, 23, 20, 0.58);
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 3;
-      }
-
-      .prose :global(.gate-lock circle) {
-        fill: rgba(26, 23, 20, 0.58);
-      }
-
-      .prose :global(.gate-stage[data-route="abort"] .gate-lock) {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .prose :global(.gate-arm rect) {
-        fill: var(--rose);
-        opacity: 0;
-        transform-box: fill-box;
-        transform-origin: left center;
-        transition:
-          opacity 0.18s ease,
-          transform 0.18s ease;
-        transform: rotate(-16deg);
-      }
-
-      .prose :global(.gate-arm circle) {
-        fill: rgba(26, 23, 20, 0.44);
-        opacity: 0;
-        transition: opacity 0.18s ease;
-      }
-
-      .prose :global(.gate-stage[data-route="abort"] .gate-arm rect),
-      .prose :global(.gate-stage[data-route="abort"] .gate-arm circle) {
-        opacity: 1;
-        transform: rotate(0deg);
-      }
-
-      .prose :global(.target-prod rect),
-      .prose :global(.target-canary rect),
-      .prose :global(.target-stop rect) {
-        fill: rgba(245, 240, 232, 0.88);
-        stroke: rgba(26, 23, 20, 0.32);
-        stroke-width: 2;
-      }
-
-      .prose :global(.target-prod path),
-      .prose :global(.target-canary path),
-      .prose :global(.target-stop path) {
+      .prose :global(.gate-track),
+      .prose :global(.gate-route),
+      .prose :global(.aperture-sheen),
+      .prose :global(.endpoint-stem),
+      .prose :global(.containment-ring),
+      .prose :global(.hold-barrier),
+      .prose :global(.hold-cap) {
         fill: none;
-        stroke: rgba(26, 23, 20, 0.5);
         stroke-linecap: round;
         stroke-linejoin: round;
-        stroke-width: 3;
       }
 
-      .prose :global(.target-prod circle),
-      .prose :global(.target-canary circle) {
-        fill: var(--teal);
+      .prose :global(.gate-track) {
+        opacity: 0.3;
+        stroke: rgba(26, 23, 20, 0.16);
+        stroke-width: 9;
+        transition:
+          opacity 0.18s ease,
+          stroke 0.18s ease;
       }
 
-      .prose :global(.target-canary circle) {
-        fill: var(--amber);
+      .prose :global(.gate-stage[data-route="predict"] .track-predict) {
+        opacity: 0.58;
+        stroke: rgba(63, 143, 138, 0.34);
       }
 
-      .prose :global(.target-stop path) {
-        stroke: var(--rose);
+      .prose :global(.gate-stage[data-route="contain"] .track-contain) {
+        opacity: 0.62;
+        stroke: rgba(201, 123, 58, 0.36);
       }
 
-      .prose :global(.gate-stage[data-route="plan"] .target-prod rect),
-      .prose :global(.gate-stage[data-route="canary"] .target-canary rect),
-      .prose :global(.gate-stage[data-route="abort"] .target-stop rect) {
-        stroke-width: 3;
-        filter: drop-shadow(0 0 8px rgba(63, 143, 138, 0.16));
+      .prose :global(.gate-stage[data-route="stop"] .track-stop) {
+        opacity: 0.66;
+        stroke: rgba(191, 95, 90, 0.38);
       }
 
-      .prose :global(.gate-cursor-target path) {
-        fill: rgba(26, 23, 20, 0.1);
-        stroke: rgba(26, 23, 20, 0.24);
-        stroke-linecap: round;
-        stroke-linejoin: round;
+      .prose :global(.gate-route) {
+        opacity: 0.95;
+        stroke: url(#gate-safe-route);
+        stroke-width: 6;
+        transition: stroke 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="contain"] .gate-route) {
+        stroke: url(#gate-canary-route);
+      }
+
+      .prose :global(.gate-stage[data-route="stop"] .gate-route) {
+        stroke: url(#gate-hold-route);
+      }
+
+      .prose :global(.aperture-shadow) {
+        fill: rgba(26, 23, 20, 0.06);
+      }
+
+      .prose :global(.aperture-blast) {
+        fill: rgba(191, 95, 90, 0.12);
+        stroke: rgba(191, 95, 90, 0.18);
+        stroke-width: 1.2;
+        transition:
+          opacity 0.18s ease,
+          r 0.18s ease;
+      }
+
+      .prose :global(.aperture-outer) {
+        fill: rgba(239, 230, 217, 0.92);
+        stroke: rgba(26, 23, 20, 0.18);
+        stroke-width: 1.4;
+      }
+
+      .prose :global(.aperture-glass) {
+        fill: url(#gate-glass);
+        stroke: rgba(26, 23, 20, 0.2);
         stroke-width: 2;
+      }
+
+      .prose :global(.aperture-opening) {
+        fill: rgba(247, 241, 232, 0.98);
+        stroke: rgba(26, 23, 20, 0.22);
+        stroke-width: 1.6;
+        transition:
+          width 0.18s ease,
+          x 0.18s ease;
+      }
+
+      .prose :global(.aperture-sheen) {
+        opacity: 0.42;
+        stroke: rgba(255, 250, 241, 0.92);
+        stroke-width: 2;
+      }
+
+      .prose :global(.route-end) {
+        color: rgba(102, 92, 82, 0.72);
+        opacity: 0.58;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .prose :global(.gate-stage[data-route="predict"] .route-predict),
+      .prose :global(.gate-stage[data-route="contain"] .route-contain),
+      .prose :global(.gate-stage[data-route="stop"] .route-stop) {
+        opacity: 1;
+        transform: translateX(3px);
+      }
+
+      .prose :global(.route-end text) {
+        fill: currentColor;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .prose :global(.containment-ring) {
+        fill: rgba(247, 241, 232, 0.18);
+        stroke: currentColor;
+        stroke-width: 2;
+      }
+
+      .prose :global(.containment-ring) {
+        stroke-dasharray: 4 4;
+      }
+
+      .prose :global(.endpoint-stem) {
+        opacity: 0.76;
+        stroke: currentColor;
+        stroke-width: 2.4;
+      }
+
+      .prose :global(.route-icon-line),
+      .prose :global(.route-icon-mark) {
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2.4;
+      }
+
+      .prose :global(.route-predict) {
+        color: var(--teal);
+      }
+
+      .prose :global(.route-contain) {
+        color: var(--amber);
+      }
+
+      .prose :global(.route-stop) {
+        color: var(--rose);
+      }
+
+      .prose :global(.canary-dot) {
+        fill: currentColor;
+      }
+
+      .prose :global(.hold-barrier) {
+        stroke: currentColor;
+        stroke-width: 5.5;
+      }
+
+      .prose :global(.hold-cap) {
+        opacity: 0.58;
+        stroke: currentColor;
+        stroke-width: 2;
+      }
+
+      .prose :global(.blast-halo) {
+        fill: rgba(191, 95, 90, 0.12);
+        pointer-events: none;
+        stroke: rgba(191, 95, 90, 0.24);
+        stroke-width: 1.5;
+        transition:
+          opacity 0.18s ease,
+          r 0.18s ease;
       }
 
       .prose :global(.gate-pulse) {
@@ -530,11 +531,11 @@ const formatted = date.toLocaleDateString("en-GB", {
           r 0.18s ease;
       }
 
-      .prose :global(.gate-stage[data-route="plan"] .gate-pulse) {
+      .prose :global(.gate-stage[data-route="predict"] .gate-pulse) {
         fill: var(--teal);
       }
 
-      .prose :global(.gate-stage[data-route="abort"] .gate-pulse) {
+      .prose :global(.gate-stage[data-route="stop"] .gate-pulse) {
         fill: var(--rose);
       }
 
@@ -546,21 +547,24 @@ const formatted = date.toLocaleDateString("en-GB", {
         transform-origin: center;
       }
 
-      .prose :global(.gate-stage[data-route="plan"] .gate-pulse-ring) {
+      .prose :global(.gate-stage[data-route="predict"] .gate-pulse-ring) {
         stroke: rgba(63, 143, 138, 0.5);
       }
 
-      .prose :global(.gate-stage[data-route="abort"] .gate-pulse-ring) {
+      .prose :global(.gate-stage[data-route="stop"] .gate-pulse-ring) {
         stroke: rgba(191, 95, 90, 0.6);
       }
 
       .prose :global(.gate-status) {
+        align-items: center;
         background: rgba(245, 240, 232, 0.82);
         border-top: 1px solid var(--rule);
         color: var(--mid);
+        display: flex;
         font-size: 0.78rem;
         line-height: 1.35;
         margin: 0;
+        min-height: 3.8rem;
         padding: 0.65rem 0.8rem;
       }
 
@@ -1041,7 +1045,7 @@ const formatted = date.toLocaleDateString("en-GB", {
           min-height: 13.2rem;
         }
         .prose :global(.gate-map text) {
-          font-size: 17px;
+          font-size: 13px;
         }
         .prose :global(.sand-stage) {
           min-height: 15.8rem;
@@ -1081,101 +1085,102 @@ const formatted = date.toLocaleDateString("en-GB", {
           if (!svg) return;
           const pulse = svg.querySelector("[data-gate-pulse]");
           const pulseRing = svg.querySelector("[data-gate-pulse-ring]");
+          const blastHalo = svg.querySelector("[data-blast-halo]");
           const trail = svg.querySelector("[data-pulse-trail]");
+          const apertureOpening = svg.querySelector("[data-aperture-opening]");
+          const apertureBlast = svg.querySelector("[data-aperture-blast]");
           const coverageFill = svg?.querySelector("[data-coverage-fill]");
           const blastFill = svg?.querySelector("[data-blast-fill]");
           const status = stage.querySelector(".gate-status");
           const scenarios = [
-            { x: 476, y: 108 },
-            { x: 418, y: 232 },
-            { x: 486, y: 304 },
+            { evidence: 0.86, blast: 0.18 },
+            { evidence: 0.52, blast: 0.44 },
+            { evidence: 0.3, blast: 0.86 },
           ];
-          const routeEnds = {
-            plan: { x: 548, y: 86 },
-            canary: { x: 538, y: 232 },
-            abort: { x: 540, y: 304 },
+          const routes = {
+            predict: {
+              end: { x: 306, y: 140 },
+              path: "M42 232 C84 232 112 216 156 216 C210 216 236 166 306 140",
+              opening: 58,
+              label: "Prediction is strong and blast radius is small: bind approval to the exact plan.",
+            },
+            contain: {
+              end: { x: 310, y: 218 },
+              path: "M42 232 C84 232 112 216 156 216 C210 216 238 216 310 218",
+              opening: 34,
+              label: "Uncertain work stays on a canary path with health gates before expansion.",
+            },
+            stop: {
+              end: { x: 300, y: 316 },
+              path: "M42 232 C84 232 112 216 156 216 C174 246 218 298 300 316",
+              opening: 12,
+              label: "High consequence or weak evidence stops the run; approval has to name the new risk.",
+            },
           };
           let scenarioIndex = 0;
-          let coverage = 0.82;
-          let blast = 0.22;
-          let route = "plan";
-          let targetX = scenarios[0].x;
-          let targetY = scenarios[0].y;
-          let currentX = 86;
-          let currentY = 248;
+          let evidence = scenarios[0].evidence;
+          let blast = scenarios[0].blast;
+          let route = "predict";
+          let targetX = routes.predict.end.x;
+          let targetY = routes.predict.end.y;
+          let currentX = 42;
+          let currentY = 232;
           let progress = 0;
           let pointerActive = false;
+          let nextAutoCycle = performance.now() + 2800;
           let last = performance.now();
           let animationId = 0;
           let isIntersecting = !("IntersectionObserver" in window);
-          const start = { x: 86, y: 248 };
-
-          const labels = {
-            plan:
-              "Gate open: evidence is high and consequence is bounded, so approval can bind to the exact artifact.",
-            canary:
-              "Gate diverts: uncertainty goes through a canary bay with independent health signals before expansion.",
-            abort:
-              "Gate locked: weak evidence plus high consequence is a different request, not an approval click.",
-          };
+          const meterWidths = { evidence: 122, blast: 118 };
 
           function chooseRoute() {
-            if (blast > 0.7 || (blast > 0.55 && coverage < 0.5)) return "abort";
-            if (coverage > 0.66 && blast < 0.55) return "plan";
-            return "canary";
+            if (blast > 0.68 || (blast > 0.54 && evidence < 0.5)) return "stop";
+            if (evidence > 0.66 && blast < 0.5) return "predict";
+            return "contain";
           }
 
           function updateState() {
             route = chooseRoute();
+            const routeState = routes[route] || routes.contain;
             stage.dataset.route = route;
-            if (status) status.textContent = labels[route];
-            coverageFill?.setAttribute("width", `${Math.max(12, coverage * 150)}`);
-            blastFill?.setAttribute("width", `${Math.max(10, blast * 150)}`);
+            if (status) status.textContent = routeState.label;
+            coverageFill?.setAttribute("width", `${Math.max(10, evidence * meterWidths.evidence)}`);
+            blastFill?.setAttribute("width", `${Math.max(8, blast * meterWidths.blast)}`);
+            trail?.setAttribute("d", routeState.path);
+            apertureOpening?.setAttribute("x", `${156 - routeState.opening / 2}`);
+            apertureOpening?.setAttribute("width", `${routeState.opening}`);
+            apertureBlast?.setAttribute("r", `${(22 + blast * 46).toFixed(1)}`);
+            apertureBlast?.setAttribute("opacity", `${(0.34 + blast * 0.48).toFixed(2)}`);
+            if (!pointerActive) {
+              targetX = routeState.end.x;
+              targetY = routeState.end.y;
+            }
           }
 
           function routePoint(amount) {
-            const end = routeEnds[route] || routeEnds.canary;
-            const t = amount % 1;
-            const control =
-              route === "plan"
-                ? { x: 300, y: 118 }
-                : route === "abort"
-                  ? { x: 318, y: 300 }
-                  : { x: 318, y: 226 };
-            const oneMinus = 1 - t;
-            return {
-              x:
-                oneMinus * oneMinus * start.x +
-                2 * oneMinus * t * control.x +
-                t * t * end.x,
-              y:
-                oneMinus * oneMinus * start.y +
-                2 * oneMinus * t * control.y +
-                t * t * end.y,
-            };
+            if (!trail?.getTotalLength) {
+              return { x: targetX, y: targetY };
+            }
+            const length = trail.getTotalLength();
+            const point = trail.getPointAtLength(length * (amount % 1));
+            return { x: point.x, y: point.y };
           }
 
           function placePulse(now = performance.now()) {
-            pulse?.setAttribute("cx", `${currentX}`);
-            pulse?.setAttribute("cy", `${currentY}`);
-            pulseRing?.setAttribute("cx", `${currentX}`);
-            pulseRing?.setAttribute("cy", `${currentY}`);
+            const x = currentX.toFixed(1);
+            const y = currentY.toFixed(1);
+            pulse?.setAttribute("cx", x);
+            pulse?.setAttribute("cy", y);
+            pulseRing?.setAttribute("cx", x);
+            pulseRing?.setAttribute("cy", y);
+            blastHalo?.setAttribute("cx", x);
+            blastHalo?.setAttribute("cy", y);
+            blastHalo?.setAttribute("r", `${(13 + blast * 28).toFixed(1)}`);
             const ringSize =
-              route === "abort"
+              route === "stop"
                 ? 16 + Math.sin(now / 90) * 3
                 : 15 + Math.sin(now / 130) * 2;
             pulseRing?.setAttribute("r", `${ringSize}`);
-            const controlX = start.x + (currentX - start.x) * 0.5;
-            const controlY =
-              route === "plan"
-                ? Math.min(start.y, currentY) - 52
-                : route === "abort"
-                  ? Math.max(start.y, currentY) + 28
-                  : (start.y + currentY) * 0.5 + 18;
-            trail?.setAttribute(
-              "d",
-              `M${start.x.toFixed(1)} ${start.y.toFixed(1)} Q${controlX.toFixed(1)} ${controlY.toFixed(1)} ${currentX.toFixed(1)} ${currentY.toFixed(1)}`,
-            );
           }
 
           function shouldAnimate() {
@@ -1210,32 +1215,39 @@ const formatted = date.toLocaleDateString("en-GB", {
             }
           }
 
-          function setTargetFromPoint(x, y) {
-            targetX = clamp(x, 58, 590);
-            targetY = clamp(y, 78, 312);
-            coverage = clamp((targetX - 80) / 470, 0.05, 0.95);
-            blast = clamp((targetY - 80) / 232, 0.05, 0.95);
+          function setPointerTarget(x, y) {
+            targetX = clamp(x, 38, 322);
+            targetY = clamp(y, 102, 340);
+            evidence = clamp((targetX - 42) / 276, 0.05, 0.95);
+            blast = clamp((targetY - 102) / 238, 0.05, 0.95);
             updateState();
           }
 
           function setFromPointer(event) {
             if (event.pointerType === "touch") return;
             const rect = stage.getBoundingClientRect();
-            const x = ((event.clientX - rect.left) / rect.width) * 640;
-            const y = ((event.clientY - rect.top) / rect.height) * 360;
+            const x = ((event.clientX - rect.left) / rect.width) * 360;
+            const y = ((event.clientY - rect.top) / rect.height) * 420;
             pointerActive = true;
-            setTargetFromPoint(x, y);
+            setPointerTarget(x, y);
             currentX = targetX;
             currentY = targetY;
             placePulse();
             updateFrameState();
           }
 
-          function cycleScenario() {
-            scenarioIndex = (scenarioIndex + 1) % scenarios.length;
+          function setScenario(index) {
+            scenarioIndex = clamp(index, 0, scenarios.length - 1);
             pointerActive = false;
             progress = 0;
-            setTargetFromPoint(scenarios[scenarioIndex].x, scenarios[scenarioIndex].y);
+            evidence = scenarios[scenarioIndex].evidence;
+            blast = scenarios[scenarioIndex].blast;
+            updateState();
+          }
+
+          function cycleScenario() {
+            setScenario((scenarioIndex + 1) % scenarios.length);
+            nextAutoCycle = performance.now() + 2800;
           }
 
           stage.addEventListener("pointerenter", setFromPointer);
@@ -1243,6 +1255,8 @@ const formatted = date.toLocaleDateString("en-GB", {
           stage.addEventListener("pointerleave", () => {
             pointerActive = false;
             progress = 0;
+            nextAutoCycle = performance.now() + 1800;
+            setScenario(scenarioIndex);
             updateFrameState();
           });
           stage.addEventListener("click", () => {
@@ -1276,6 +1290,10 @@ const formatted = date.toLocaleDateString("en-GB", {
               currentX = targetX;
               currentY = targetY;
             } else {
+              if (now >= nextAutoCycle) {
+                setScenario((scenarioIndex + 1) % scenarios.length);
+                nextAutoCycle = now + 2800;
+              }
               progress = (progress + delta / 2800) % 1;
               const point = routePoint(progress);
               currentX = point.x;
@@ -1285,12 +1303,16 @@ const formatted = date.toLocaleDateString("en-GB", {
             scheduleFrame();
           }
 
-          updateState();
+          setScenario(0);
           placePulse();
 
           if ("IntersectionObserver" in window) {
             const observer = new IntersectionObserver(([entry]) => {
+              const wasIntersecting = isIntersecting;
               isIntersecting = Boolean(entry?.isIntersecting);
+              if (isIntersecting && !wasIntersecting) {
+                nextAutoCycle = performance.now() + 2400;
+              }
               updateFrameState();
             });
             observer.observe(stage);

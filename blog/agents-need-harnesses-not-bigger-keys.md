@@ -89,27 +89,28 @@ Bulk automation sits between the two. Ansible check mode is useful, but only mod
 
 A harnessed rollout should turn uncertainty into measured expansion. Apply to one host or 1% of tenants, wait for independent health and SLO signals, expand only while thresholds hold, and stop automatically when they do not.
 
-<figure class="article-figure gate-matrix" aria-label="Interactive consequence gate visualization for prediction, containment, and abort paths.">
+<figure class="article-figure gate-matrix" aria-label="Interactive consequence gate visualization for prediction, containment, and stop paths.">
   <figcaption>Gate consequence, not confidence.</figcaption>
-  <div class="gate-stage" data-gate-stage tabindex="0" role="button" aria-label="Move the pointer to steer the operation pulse. The consequence gate opens, sends the work to canary, or locks shut. Tap to cycle states.">
-    <svg class="gate-map" viewBox="0 0 640 360" aria-hidden="true">
+  <div class="gate-stage" data-gate-stage tabindex="0" role="button" aria-label="Move the pointer to change evidence and blast radius. The consequence aperture opens, constrains, or holds the operation. Tap to cycle states.">
+    <svg class="gate-map" viewBox="0 0 360 420" aria-hidden="true">
       <defs>
-        <linearGradient id="gate-floor-gradient" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="#f6f0e6" />
-          <stop offset="1" stop-color="#e6ded0" />
+        <linearGradient id="gate-safe-route" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#2f817a" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#75b7af" stop-opacity="0.86" />
         </linearGradient>
-        <linearGradient id="predict-gradient" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="#2f817a" stop-opacity="0.12" />
-          <stop offset="1" stop-color="#2f817a" stop-opacity="0.92" />
+        <linearGradient id="gate-canary-route" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#c97b3a" stop-opacity="0.94" />
+          <stop offset="1" stop-color="#e5b072" stop-opacity="0.86" />
         </linearGradient>
-        <linearGradient id="contain-gradient" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="#c97b3a" stop-opacity="0.12" />
-          <stop offset="1" stop-color="#c97b3a" stop-opacity="0.95" />
+        <linearGradient id="gate-hold-route" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#bf5f5a" stop-opacity="0.95" />
+          <stop offset="1" stop-color="#d99690" stop-opacity="0.84" />
         </linearGradient>
-        <linearGradient id="abort-gradient" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="#bf5f5a" stop-opacity="0.16" />
-          <stop offset="1" stop-color="#bf5f5a" stop-opacity="0.94" />
-        </linearGradient>
+        <radialGradient id="gate-glass" cx="48%" cy="40%" r="58%">
+          <stop offset="0" stop-color="#fff8ed" stop-opacity="0.98" />
+          <stop offset="0.72" stop-color="#eadfcd" stop-opacity="0.94" />
+          <stop offset="1" stop-color="#cfc4b4" stop-opacity="0.9" />
+        </radialGradient>
         <filter id="soft-token-glow" x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="5" result="blur" />
           <feMerge>
@@ -118,72 +119,54 @@ A harnessed rollout should turn uncertainty into measured expansion. Apply to on
           </feMerge>
         </filter>
       </defs>
-      <rect class="gate-floor" x="0" y="0" width="640" height="360" />
-      <path class="gate-lane lane-approach" d="M50 248 C128 222 196 220 274 214" />
-      <path class="gate-lane lane-plan" d="M352 164 C424 132 492 106 592 84" />
-      <path class="gate-lane lane-canary" d="M350 214 C416 224 482 234 592 232" />
-      <path class="gate-lane lane-abort" d="M334 254 C402 286 496 298 592 304" />
-      <path class="gate-trail" data-pulse-trail d="M76 248 C150 230 218 222 300 210" />
+      <rect class="gate-panel" x="22" y="24" width="316" height="368" rx="26" />
+      <path class="gate-grid" d="M46 122 H314 M46 278 H314 M156 112 V334" />
       <g class="gate-meter">
-        <text x="42" y="42">evidence</text>
-        <rect x="42" y="54" width="160" height="8" rx="4" />
-        <rect data-coverage-fill x="42" y="54" width="120" height="8" rx="4" />
-        <text x="418" y="42">blast radius</text>
-        <rect x="418" y="54" width="160" height="8" rx="4" />
-        <rect data-blast-fill x="418" y="54" width="54" height="8" rx="4" />
+        <text x="48" y="60">evidence</text>
+        <rect class="meter-rail" x="48" y="74" width="122" height="8" rx="4" />
+        <rect data-coverage-fill x="48" y="74" width="105" height="8" rx="4" />
+        <text x="194" y="60">blast radius</text>
+        <rect class="meter-rail" x="194" y="74" width="118" height="8" rx="4" />
+        <rect data-blast-fill x="194" y="74" width="24" height="8" rx="4" />
       </g>
-      <g class="consequence-gate" data-gate-body>
-        <rect class="gate-shadow" x="286" y="106" width="72" height="176" rx="12" />
-        <rect class="gate-post gate-post-left" x="272" y="94" width="22" height="198" rx="5" />
-        <rect class="gate-post gate-post-right" x="350" y="94" width="22" height="198" rx="5" />
-        <rect class="gate-header" x="262" y="88" width="120" height="22" rx="6" />
-        <g class="gate-door gate-door-left" data-gate-door-left>
-          <rect x="293" y="116" width="31" height="136" rx="4" />
-          <path d="M302 138 H318 M302 166 H318 M302 194 H318 M302 222 H318" />
-        </g>
-        <g class="gate-door gate-door-right" data-gate-door-right>
-          <rect x="326" y="116" width="31" height="136" rx="4" />
-          <path d="M332 138 H348 M332 166 H348 M332 194 H348 M332 222 H348" />
-        </g>
-        <g class="gate-lock" data-gate-lock>
-          <path d="M309 169 V153 C309 139 341 139 341 153 V169" />
-          <rect x="302" y="169" width="46" height="38" rx="8" />
-          <circle cx="325" cy="188" r="4" />
-          <path d="M325 192 V200" />
-        </g>
-        <g class="gate-arm" data-gate-arm>
-          <rect x="272" y="248" width="104" height="9" rx="5" />
-          <circle cx="274" cy="252" r="10" />
+      <g class="gate-aperture-system">
+        <path class="gate-track track-predict" d="M42 232 C84 232 112 216 156 216 C210 216 236 166 306 140" />
+        <path class="gate-track track-contain" d="M42 232 C84 232 112 216 156 216 C210 216 238 216 310 218" />
+        <path class="gate-track track-stop" d="M42 232 C84 232 112 216 156 216 C174 246 218 298 300 316" />
+        <path class="gate-route" data-pulse-trail d="M42 232 C84 232 112 216 156 216 C210 216 236 166 306 140" />
+        <circle class="blast-halo" data-blast-halo cx="42" cy="232" r="18" />
+        <g class="aperture" data-aperture>
+          <circle class="aperture-shadow" cx="156" cy="216" r="70" />
+          <circle class="aperture-blast" data-aperture-blast cx="156" cy="216" r="34" />
+          <circle class="aperture-outer" cx="156" cy="216" r="55" />
+          <circle class="aperture-glass" cx="156" cy="216" r="42" />
+          <path class="aperture-sheen" d="M127 197 C141 184 171 183 187 198" />
+          <rect class="aperture-opening" data-aperture-opening x="126" y="205" width="60" height="22" rx="11" />
         </g>
       </g>
-      <g class="target-prod" data-target-prod>
-        <rect x="520" y="56" width="54" height="64" rx="8" />
-        <path d="M532 76 H562 M532 92 H562 M532 108 H562" />
-        <circle cx="566" cy="66" r="4" />
-        <path d="M538 48 L547 36 L556 48" />
+      <g class="route-end route-predict" data-route-end="predict">
+        <text x="223" y="116">exact plan</text>
+        <path class="endpoint-stem" d="M294 126 V152" />
+        <path class="route-icon-line" d="M301 132 H316 M301 142 H312" />
+        <path class="route-icon-mark" d="M295 153 L302 160 L317 143" />
       </g>
-      <g class="target-canary" data-target-canary>
-        <rect x="496" y="194" width="82" height="66" rx="10" />
-        <path d="M512 220 H560" />
-        <path d="M512 238 C522 228 532 242 542 232 C550 224 556 228 564 218" />
-        <circle cx="514" cy="210" r="5" />
-        <circle cx="536" cy="210" r="5" />
-        <circle cx="558" cy="210" r="5" />
+      <g class="route-end route-contain" data-route-end="contain">
+        <text x="231" y="202">canary</text>
+        <ellipse class="containment-ring" cx="306" cy="217" rx="24" ry="17" />
+        <path class="route-icon-line" d="M292 221 C301 208 310 228 321 210" />
+        <circle class="canary-dot" cx="294" cy="204" r="3.5" />
+        <circle class="canary-dot" cx="307" cy="204" r="3.5" />
+        <circle class="canary-dot" cx="320" cy="204" r="3.5" />
       </g>
-      <g class="target-stop" data-target-stop>
-        <rect x="506" y="280" width="66" height="44" rx="8" />
-        <path d="M520 302 H558" />
-        <path d="M526 292 L552 314" />
-        <path d="M552 292 L526 314" />
+      <g class="route-end route-stop" data-route-end="stop">
+        <text x="234" y="302">hold</text>
+        <path class="hold-cap" d="M286 295 H319 M286 335 H319" />
+        <path class="hold-barrier" d="M296 296 V334 M309 296 V334" />
       </g>
-      <g class="gate-cursor-target" data-cursor-target>
-        <path d="M64 234 L90 248 L64 262 Z" />
-        <path d="M92 248 H134" />
-      </g>
-      <circle class="gate-pulse-ring" data-gate-pulse-ring cx="86" cy="248" r="18" />
-      <circle class="gate-pulse" data-gate-pulse cx="86" cy="248" r="9" filter="url(#soft-token-glow)" />
+      <circle class="gate-pulse-ring" data-gate-pulse-ring cx="42" cy="232" r="17" />
+      <circle class="gate-pulse" data-gate-pulse cx="42" cy="232" r="9" filter="url(#soft-token-glow)" />
     </svg>
-    <p class="gate-status" aria-live="polite">Steer the pulse: evidence opens the gate, uncertainty diverts to canary, high blast radius locks it shut.</p>
+    <p class="gate-status" aria-live="polite">Prediction is strong and blast radius is small: bind approval to the exact plan.</p>
   </div>
 </figure>
 
