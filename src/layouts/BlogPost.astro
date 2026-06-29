@@ -751,7 +751,10 @@ const formatted = date.toLocaleDateString("en-GB", {
       }
 
       .prose :global(.sand-stage) {
-        background: linear-gradient(180deg, #efe8dc, #e9e1d4);
+        background:
+          radial-gradient(circle at 42% 50%, rgba(63, 143, 138, 0.1), transparent 34%),
+          radial-gradient(circle at 86% 52%, rgba(191, 95, 90, 0.12), transparent 31%),
+          linear-gradient(135deg, #f3ebdf, #e8dfd2);
         border: 1px solid var(--rule);
         cursor: pointer;
         min-height: 20rem;
@@ -764,51 +767,192 @@ const formatted = date.toLocaleDateString("en-GB", {
         box-shadow: 0 0 0 3px rgba(191, 95, 90, 0.24);
       }
 
-      .prose :global(.sand-stage canvas) {
+      .prose :global(.evidence-map) {
         display: block;
-        height: auto;
+        min-height: 17rem;
         width: 100%;
       }
 
-      .prose :global(.sand-hud) {
-        color: rgba(26, 23, 20, 0.62);
-        display: grid;
-        font-size: 0.72rem;
-        font-weight: 500;
-        grid-template-columns: repeat(3, 1fr);
-        left: 0;
+      .prose :global(.evidence-map text) {
+        fill: var(--mid);
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
         letter-spacing: 0;
-        padding: 0.65rem 0.75rem;
-        pointer-events: none;
-        position: absolute;
-        right: 0;
         text-transform: uppercase;
-        top: 0;
       }
 
-      .prose :global(.sand-hud span:nth-child(2)) {
-        text-align: center;
+      .prose :global(.evidence-panel) {
+        fill: rgba(247, 241, 232, 0.55);
+        stroke: rgba(217, 208, 195, 0.74);
+        stroke-width: 1;
       }
 
-      .prose :global(.sand-hud span:nth-child(3)) {
-        text-align: right;
+      .prose :global(.evidence-shadow-route),
+      .prose :global(.evidence-route),
+      .prose :global(.claim-line),
+      .prose :global(.filter-slot),
+      .prose :global(.filter-crack),
+      .prose :global(.execution-boundary),
+      .prose :global(.execution-lines),
+      .prose :global(.quarantine-basin),
+      .prose :global(.quarantine-mark) {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .prose :global(.evidence-shadow-route) {
+        opacity: 0.34;
+        stroke: rgba(26, 23, 20, 0.14);
+        stroke-width: 8;
+      }
+
+      .prose :global(.evidence-route) {
+        opacity: 0.12;
+        stroke-width: 6;
+        transition:
+          opacity 0.18s ease,
+          stroke-width 0.18s ease;
+      }
+
+      .prose :global(.route-self),
+      .prose :global(.route-reject) {
+        stroke: url(#evidence-bad-flow);
+      }
+
+      .prose :global(.route-pass) {
+        stroke: url(#evidence-safe-flow);
+      }
+
+      .prose :global(.sand-stage[data-mode="self"] .route-self),
+      .prose :global(.sand-stage[data-mode="independent"] .route-pass),
+      .prose :global(.sand-stage[data-mode="independent"] .route-reject) {
+        opacity: 0.96;
+      }
+
+      .prose :global(.claim-sheet) {
+        fill: rgba(247, 241, 232, 0.82);
+        stroke: rgba(26, 23, 20, 0.2);
+        stroke-width: 1.6;
+      }
+
+      .prose :global(.claim-line) {
+        stroke: rgba(26, 23, 20, 0.23);
+        stroke-width: 2;
+      }
+
+      .prose :global(.claim-badge) {
+        fill: rgba(191, 95, 90, 0.18);
+        stroke: rgba(191, 95, 90, 0.62);
+        stroke-width: 2;
+      }
+
+      .prose :global(.filter-shadow) {
+        fill: rgba(26, 23, 20, 0.06);
+      }
+
+      .prose :global(.filter-glass) {
+        fill: rgba(247, 241, 232, 0.82);
+        stroke: rgba(26, 23, 20, 0.32);
+        stroke-width: 2.2;
+      }
+
+      .prose :global(.filter-slot) {
+        stroke: rgba(63, 143, 138, 0.68);
+        stroke-width: 4.6;
+        transition: stroke 0.18s ease;
+      }
+
+      .prose :global(.filter-crack) {
+        opacity: 0;
+        stroke: rgba(191, 95, 90, 0.78);
+        stroke-width: 3;
+        transition: opacity 0.18s ease;
+      }
+
+      .prose :global(.sand-stage[data-mode="self"] .filter-slot) {
+        stroke: rgba(191, 95, 90, 0.36);
+      }
+
+      .prose :global(.sand-stage[data-mode="self"] .filter-crack) {
+        opacity: 1;
+      }
+
+      .prose :global(.execution-boundary) {
+        stroke: rgba(26, 23, 20, 0.2);
+        stroke-width: 5;
+      }
+
+      .prose :global(.execution-lines) {
+        stroke: rgba(26, 23, 20, 0.14);
+        stroke-width: 2;
+      }
+
+      .prose :global(.execution-impact) {
+        fill: rgba(191, 95, 90, 0.14);
+        opacity: 0;
+        stroke: rgba(191, 95, 90, 0.3);
+        stroke-width: 1.4;
+        transition:
+          opacity 0.18s ease,
+          r 0.18s ease;
+      }
+
+      .prose :global(.sand-stage[data-mode="self"] .execution-impact) {
+        opacity: 1;
+      }
+
+      .prose :global(.quarantine-basin),
+      .prose :global(.quarantine-mark) {
+        opacity: 0.34;
+        stroke: rgba(191, 95, 90, 0.46);
+        stroke-width: 3;
+        transition: opacity 0.18s ease;
+      }
+
+      .prose :global(.sand-stage[data-mode="independent"] .quarantine-basin),
+      .prose :global(.sand-stage[data-mode="independent"] .quarantine-mark) {
+        opacity: 0.86;
+      }
+
+      .prose :global(.evidence-bad-token) {
+        fill: var(--rose);
+      }
+
+      .prose :global(.evidence-good-token) {
+        fill: var(--teal);
+        opacity: 0;
+        transition: opacity 0.18s ease;
+      }
+
+      .prose :global(.sand-stage[data-mode="independent"] .evidence-good-token) {
+        opacity: 1;
+      }
+
+      .prose :global(.evidence-token-ring) {
+        fill: none;
+        pointer-events: none;
+        stroke: rgba(191, 95, 90, 0.56);
+        stroke-width: 2;
+        transition: stroke 0.18s ease;
+      }
+
+      .prose :global(.sand-stage[data-mode="independent"] .evidence-token-ring) {
+        stroke: rgba(191, 95, 90, 0.46);
       }
 
       .prose :global(.sand-mode) {
         align-items: center;
         background: rgba(245, 240, 232, 0.86);
         border-top: 1px solid rgba(217, 208, 195, 0.8);
-        bottom: 0;
         color: var(--mid);
         display: flex;
-        font-size: 0.68rem;
-        left: 0;
-        min-height: 2rem;
-        opacity: 0.74;
-        padding: 0.2rem 0.65rem;
-        position: absolute;
-        right: 0;
-        text-transform: uppercase;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        margin: 0;
+        min-height: 3.8rem;
+        padding: 0.65rem 0.8rem;
       }
 
       .prose :global(.sandbox-stage) {
@@ -1051,7 +1195,7 @@ const formatted = date.toLocaleDateString("en-GB", {
           min-height: 15.8rem;
         }
         .prose :global(.sand-mode) {
-          font-size: 0.66rem;
+          font-size: 0.76rem;
         }
         .prose :global(.sandbox-stage) {
           min-height: 15.8rem;
@@ -1476,133 +1620,52 @@ const formatted = date.toLocaleDateString("en-GB", {
         }
 
         function initSandStage(stage) {
-          const canvas = stage.querySelector("canvas");
-          const ctx = canvas?.getContext("2d");
+          const svg = stage.querySelector(".evidence-map");
           const modeLabel = stage.querySelector(".sand-mode");
-          if (!canvas || !ctx) return;
-
-          const world = { width: 540, height: 360 };
+          if (!svg) return;
+          const badToken = svg.querySelector("[data-evidence-bad-token]");
+          const goodToken = svg.querySelector("[data-evidence-good-token]");
+          const ring = svg.querySelector("[data-evidence-ring]");
+          const impact = svg.querySelector("[data-execution-impact]");
+          const selfRoute = svg.querySelector("[data-self-route]");
+          const passRoute = svg.querySelector("[data-pass-route]");
+          const rejectRoute = svg.querySelector("[data-reject-route]");
           let mode = "self";
-          let particles = [];
-          let caught = 0;
-          let impact = 0;
+          let progress = 0;
+          let nextAutoCycle = performance.now() + 4800;
           let last = performance.now();
           let animationId = 0;
           let isIntersecting = !("IntersectionObserver" in window);
 
-          function resize() {
-            const rect = stage.getBoundingClientRect();
-            const width = Math.max(320, rect.width);
-            const height = width * (world.height / world.width);
-            const scale = window.devicePixelRatio || 1;
-            canvas.style.height = `${height}px`;
-            canvas.width = Math.round(width * scale);
-            canvas.height = Math.round(height * scale);
-            ctx.setTransform(
-              canvas.width / world.width,
-              0,
-              0,
-              canvas.height / world.height,
-              0,
-              0,
-            );
+          const modes = {
+            self: {
+              label: "Self-graded: a bad claim rides the shortcut into execution.",
+              path: selfRoute,
+            },
+            independent: {
+              label: "Independent evidence: the bad claim is diverted before execution.",
+              path: rejectRoute,
+            },
+          };
+
+          function pointOn(path, amount) {
+            if (!path?.getTotalLength) return { x: 42, y: 218 };
+            const length = path.getTotalLength();
+            const point = path.getPointAtLength(length * (amount % 1));
+            return { x: point.x, y: point.y };
           }
 
-          function roundedRect(x, y, width, height, radius) {
-            const r = Math.min(radius, width / 2, height / 2);
-            ctx.moveTo(x + r, y);
-            ctx.lineTo(x + width - r, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-            ctx.lineTo(x + width, y + height - r);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-            ctx.lineTo(x + r, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-            ctx.lineTo(x, y + r);
-            ctx.quadraticCurveTo(x, y, x + r, y);
+          function setToken(token, point) {
+            token?.setAttribute("cx", `${point.x.toFixed(1)}`);
+            token?.setAttribute("cy", `${point.y.toFixed(1)}`);
           }
 
-          function makeParticle(seed = 0) {
-            const spread = Math.sin(seed * 9.17) * 0.5 + 0.5;
-            const bad = Math.random() < (mode === "self" ? 0.62 : 0.5);
-            const lane = -2 + Math.floor(Math.random() * 5);
-            return {
-              bad,
-              caught: false,
-              lane,
-              settled: false,
-              stopX: 0,
-              stopY: 0,
-              x: 92 + spread * 52,
-              y: 112 + lane * 5 + Math.random() * 12,
-              vx: (mode === "self" ? 1.85 : 1.42) + Math.random() * 0.7,
-              vy: 0,
-              r: 1.7 + Math.random() * 1.7,
-              life: 0,
-              color: bad
-                ? `rgba(${176 + Math.random() * 46}, ${54 + Math.random() * 30}, ${46 + Math.random() * 28}, 0.9)`
-                : `rgba(${62 + Math.random() * 34}, ${132 + Math.random() * 38}, ${122 + Math.random() * 34}, 0.86)`,
-            };
-          }
-
-          function seedParticles() {
-            particles = [];
-            for (let i = 0; i < 64; i += 1) {
-              const particle = makeParticle(i);
-              particle.x += Math.random() * 145;
-              particle.y = streamY(particle, particle.x) + Math.random() * 10 - 5;
-              particles.push(particle);
-            }
-            if (mode === "self") {
-              for (let i = 0; i < 28; i += 1) {
-                particles.push({
-                  bad: true,
-                  caught: false,
-                  lane: -2 + Math.floor(Math.random() * 5),
-                  settled: true,
-                  stopX: 408 + Math.random() * 74,
-                  stopY: 250 + Math.random() * 20,
-                  x: 408 + Math.random() * 74,
-                  y: 250 + Math.random() * 20,
-                  vx: -0.08 + Math.random() * 0.16,
-                  vy: -0.05 + Math.random() * 0.1,
-                  r: 1.9 + Math.random() * 1.8,
-                  life: 40 + Math.random() * 80,
-                  color: `rgba(${182 + Math.random() * 36}, ${48 + Math.random() * 26}, ${42 + Math.random() * 22}, 0.9)`,
-                });
-              }
-            } else {
-              for (let i = 0; i < 26; i += 1) {
-                particles.push({
-                  bad: true,
-                  caught: true,
-                  lane: -2 + Math.floor(Math.random() * 5),
-                  settled: false,
-                  stopX: 200 + Math.random() * 62,
-                  stopY: 236 + Math.random() * 34,
-                  x: 200 + Math.random() * 62,
-                  y: 236 + Math.random() * 34,
-                  vx: -0.12 + Math.random() * 0.24,
-                  vy: -0.08 + Math.random() * 0.16,
-                  r: 1.8 + Math.random() * 1.7,
-                  life: 30 + Math.random() * 70,
-                  color: `rgba(${176 + Math.random() * 36}, ${54 + Math.random() * 28}, ${46 + Math.random() * 22}, 0.82)`,
-                });
-              }
-            }
-          }
-
-          function setMode(next) {
-            mode = next;
+          function setMode(next, reset = true) {
+            mode = next === "independent" ? "independent" : "self";
             stage.dataset.mode = mode;
-            if (modeLabel) {
-              modeLabel.textContent =
-                mode === "self"
-                  ? "self-graded: unsupported claims hit production"
-                  : "independent evidence: bad grains are trapped before execution";
-            }
-            seedParticles();
-            caught = mode === "independent" ? 26 : 0;
-            impact = mode === "self" ? 36 : 0;
+            if (modeLabel) modeLabel.textContent = modes[mode].label;
+            if (reset) progress = 0;
+            nextAutoCycle = performance.now() + 4800;
             last = performance.now();
           }
 
@@ -1618,7 +1681,7 @@ const formatted = date.toLocaleDateString("en-GB", {
           function scheduleFrame() {
             if (animationId || !shouldAnimate()) return;
             last = performance.now();
-            animationId = requestAnimationFrame(draw);
+            animationId = requestAnimationFrame(frame);
           }
 
           function updateFrameState() {
@@ -1626,334 +1689,46 @@ const formatted = date.toLocaleDateString("en-GB", {
               scheduleFrame();
             } else {
               stopFrame();
-              draw(performance.now(), false);
+              placeTokens(performance.now());
             }
           }
 
-          function streamY(particle, x) {
-            const lane = particle.lane * 6;
-            if (x < 180) return 116 + lane + (x - 92) * 0.16;
-            if (x < 278) return 130 + lane + (x - 180) * 0.22;
-            if (mode === "independent" && particle.bad) return 244 + lane * 0.24;
-            if (x < 388) return 154 + lane + (x - 278) * 0.24;
-            return 248 + lane * 0.35;
-          }
-
-          function spawn() {
-            const limit = mode === "self" ? 180 : 156;
-            const count = mode === "self" ? 4 : 3;
-            for (let i = 0; i < count && particles.length < limit; i += 1) {
-              particles.push(makeParticle(performance.now() + i));
+          function placeTokens(now = performance.now()) {
+            const badPath = modes[mode].path;
+            const badPoint = pointOn(badPath, progress);
+            setToken(badToken, badPoint);
+            setToken(ring, badPoint);
+            const pulse = 15 + Math.sin(now / (mode === "self" ? 82 : 120)) * 2.4;
+            ring?.setAttribute("r", `${pulse.toFixed(1)}`);
+            if (mode === "independent") {
+              const goodPoint = pointOn(passRoute, (progress + 0.42) % 1);
+              setToken(goodToken, goodPoint);
+            } else {
+              setToken(goodToken, { x: 42, y: 218 });
             }
+            impact?.setAttribute("r", `${(mode === "self" ? 28 + Math.sin(now / 95) * 5 : 20).toFixed(1)}`);
           }
 
-          function collideGate(particle, previousX) {
-            if (mode === "self") {
-              const sieveX = 278;
-              const insideTornSieve =
-                previousX < sieveX &&
-                particle.x >= sieveX &&
-                particle.y > 88 &&
-                particle.y < 270;
-              if (insideTornSieve) {
-                particle.vx += particle.bad ? 0.62 : 0.28;
-                particle.vy *= 0.42;
-              }
-              if (particle.bad && particle.x > 372 && particle.y > 138) {
-                particle.color = "rgba(183, 54, 46, 0.9)";
-              }
+          function frame(now) {
+            animationId = 0;
+            if (!shouldAnimate()) {
+              placeTokens(now);
               return;
             }
-
-            const sieveX = 278;
-            const crossedSieve =
-              previousX < sieveX &&
-              particle.x >= sieveX &&
-              particle.y > 82 &&
-              particle.y < 274;
-            if (crossedSieve && particle.bad) {
-              particle.caught = true;
-              particle.stopX = 196 + Math.random() * 70;
-              particle.stopY = 238 + Math.random() * 32;
-              particle.x = sieveX - particle.r - 0.4;
-              particle.vx = -Math.abs(particle.vx) * 0.48;
-              particle.vy *= 0.58;
-              caught += 0.9;
-              particle.color = "rgba(189, 64, 54, 0.86)";
-            }
-            if (crossedSieve && !particle.bad) {
-              particle.vx += 0.42;
-            }
-          }
-
-          function step() {
-            spawn();
-            caught *= 0.994;
-            for (const particle of particles) {
-              const previousX = particle.x;
-              particle.life += 1;
-              if (particle.caught || particle.settled) {
-                particle.vx += (particle.stopX - particle.x) * 0.012;
-                particle.vy += (particle.stopY - particle.y) * 0.026;
-                particle.vx *= 0.86;
-                particle.vy *= 0.86;
-              } else {
-                particle.vx += mode === "self" ? 0.01 : 0.004;
-                particle.vy += (streamY(particle, particle.x) - particle.y) * 0.075;
-                particle.vx = clamp(particle.vx, 0.52, mode === "self" ? 3.4 : 2.7);
-                particle.vy = clamp(particle.vy, -1.45, 1.45);
-              }
-              particle.x += particle.vx;
-              particle.y += particle.vy;
-              collideGate(particle, previousX);
-
-              if (mode === "self" && particle.bad && !particle.settled && particle.x > 398) {
-                particle.settled = true;
-                particle.stopX = 408 + Math.random() * 76;
-                particle.stopY = 250 + Math.random() * 20;
-                particle.vx *= 0.35;
-                impact += 0.25;
-              }
-
-              if (particle.x < particle.r) {
-                particle.x = particle.r;
-                particle.vx = Math.abs(particle.vx) * 0.5;
-              }
-              if (particle.x > world.width - particle.r) {
-                particle.x = world.width - particle.r;
-                particle.vx = -Math.abs(particle.vx) * 0.45;
-              }
-              if (particle.y > world.height - 24 - particle.r) {
-                particle.y = world.height - 24 - particle.r;
-                particle.vy = -Math.abs(particle.vy) * 0.22;
-                particle.vx *= 0.86;
-              }
-            }
-
-            const badInExecution = particles.filter(
-              (particle) =>
-                particle.bad &&
-                particle.x > 380 &&
-                particle.x < 510 &&
-                particle.y > 142 &&
-                particle.y < 292,
-            ).length;
-            impact = impact * 0.92 + badInExecution * 0.08;
-
-            particles = particles.filter((particle) => {
-              const settledTooLong =
-                particle.life > 260 && (particle.caught || particle.settled);
-              const exited = particle.life > 150 && particle.x > world.width + 36;
-              return particle.y < world.height + 42 && !settledTooLong && !exited;
-            });
-          }
-
-          function drawHopper() {
-            ctx.save();
-            ctx.translate(46, 66);
-            ctx.rotate(-0.08);
-            ctx.fillStyle = "rgba(245, 240, 232, 0.88)";
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
-            ctx.lineWidth = 2.4;
-            ctx.beginPath();
-            roundedRect(0, 0, 108, 74, 6);
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = "rgba(26, 23, 20, 0.14)";
-            ctx.beginPath();
-            roundedRect(34, -8, 38, 15, 5);
-            ctx.fill();
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.18)";
-            ctx.lineWidth = 2;
-            for (let y = 22; y < 60; y += 13) {
-              ctx.beginPath();
-              ctx.moveTo(18, y);
-              ctx.lineTo(88, y);
-              ctx.stroke();
-            }
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.24)";
-            ctx.beginPath();
-            ctx.moveTo(86, 60);
-            ctx.lineTo(132, 92);
-            ctx.stroke();
-            ctx.restore();
-          }
-
-          function drawStreamGuide() {
-            ctx.save();
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.11)";
-            ctx.lineWidth = 7;
-            ctx.beginPath();
-            ctx.moveTo(118, 128);
-            ctx.bezierCurveTo(178, 144, 226, 156, 278, 174);
-            ctx.bezierCurveTo(338, 196, 386, 226, 444, 254);
-            ctx.stroke();
-            ctx.strokeStyle =
-              mode === "self" ? "rgba(191, 95, 90, 0.2)" : "rgba(63, 143, 138, 0.18)";
-            ctx.lineWidth = 2;
-            ctx.setLineDash([10, 12]);
-            ctx.beginPath();
-            ctx.moveTo(118, 128);
-            ctx.bezierCurveTo(178, 144, 226, 156, 278, 174);
-            ctx.bezierCurveTo(338, 196, 386, 226, 444, 254);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.restore();
-          }
-
-          function drawBasin() {
-            const spill = clamp(impact / 58, 0, 1);
-            ctx.save();
-            ctx.fillStyle = "rgba(245, 240, 232, 0.86)";
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            roundedRect(382, 108, 112, 174, 10);
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = "rgba(26, 23, 20, 0.08)";
-            for (let y = 128; y < 238; y += 26) {
-              ctx.beginPath();
-              roundedRect(396, y, 84, 16, 4);
-              ctx.fill();
-            }
-            ctx.fillStyle = mode === "self" ? "rgba(191, 95, 90, 0.9)" : "rgba(63, 143, 138, 0.8)";
-            ctx.beginPath();
-            ctx.arc(470, 118, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.32)";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(438, 258, 22, Math.PI, Math.PI * 2);
-            ctx.stroke();
-            ctx.strokeStyle = mode === "self" ? "rgba(191, 95, 90, 0.72)" : "rgba(63, 143, 138, 0.72)";
-            ctx.beginPath();
-            ctx.moveTo(418, 258);
-            ctx.lineTo(mode === "self" ? 456 : 432, mode === "self" ? 230 - spill * 18 : 246);
-            ctx.stroke();
-            if (spill > 0.04) {
-              const alpha = clamp(0.1 + spill * 0.42, 0.1, 0.52);
-              ctx.fillStyle = `rgba(191, 95, 90, ${alpha})`;
-              ctx.beginPath();
-              roundedRect(384, 196 - spill * 18, 108, 78 + spill * 24, 12);
-              ctx.fill();
-              ctx.strokeStyle = `rgba(191, 95, 90, ${alpha + 0.14})`;
-              ctx.lineWidth = 3;
-              ctx.beginPath();
-              ctx.moveTo(404, 274);
-              ctx.bezierCurveTo(426, 294, 466, 292, 486, 270);
-              ctx.stroke();
-            }
-            ctx.restore();
-          }
-
-          function drawGate() {
-            ctx.save();
-            ctx.lineCap = "round";
-            ctx.lineWidth = 4;
-            ctx.fillStyle = "rgba(245, 240, 232, 0.74)";
-            ctx.strokeStyle = "rgba(26, 23, 20, 0.28)";
-            ctx.beginPath();
-            roundedRect(238, 76, 82, 208, 9);
-            ctx.fill();
-            ctx.stroke();
-            if (mode === "self") {
-              ctx.strokeStyle = "rgba(191, 95, 90, 0.68)";
-              ctx.lineWidth = 4;
-              for (let y = 96; y < 262; y += 30) {
-                ctx.beginPath();
-                ctx.moveTo(250, y);
-                ctx.lineTo(306, y + 18);
-                ctx.stroke();
-              }
-              ctx.strokeStyle = "rgba(191, 95, 90, 0.88)";
-              ctx.setLineDash([12, 9]);
-              ctx.beginPath();
-              ctx.moveTo(270, 88);
-              ctx.lineTo(292, 134);
-              ctx.lineTo(266, 170);
-              ctx.lineTo(300, 224);
-              ctx.lineTo(278, 270);
-              ctx.stroke();
-              ctx.setLineDash([]);
-              ctx.fillStyle = "rgba(191, 95, 90, 0.1)";
-              ctx.beginPath();
-              roundedRect(282, 104, 28, 154, 8);
-              ctx.fill();
-            } else {
-              ctx.strokeStyle = "rgba(63, 143, 138, 0.82)";
-              ctx.lineWidth = 3;
-              for (let y = 92; y < 270; y += 18) {
-                ctx.beginPath();
-                ctx.moveTo(250, y);
-                ctx.lineTo(308, y + 12);
-                ctx.stroke();
-              }
-              for (let x = 252; x < 308; x += 14) {
-                ctx.beginPath();
-                ctx.moveTo(x, 88);
-                ctx.lineTo(x + 18, 268);
-                ctx.stroke();
-              }
-              ctx.fillStyle = "rgba(63, 143, 138, 0.14)";
-              ctx.beginPath();
-              roundedRect(186, 244, 92 + clamp(caught, 0, 46), 30, 8);
-              ctx.fill();
-              ctx.strokeStyle = "rgba(191, 95, 90, 0.48)";
-              ctx.lineWidth = 2;
-              ctx.beginPath();
-              ctx.moveTo(190, 244);
-              ctx.lineTo(274, 244);
-              ctx.stroke();
-            }
-            ctx.restore();
-          }
-
-          function draw(now, forceStatic = false) {
-            animationId = 0;
-            const animate = !forceStatic && shouldAnimate();
-            const delta = Math.min(64, now - last);
+            const delta = Math.min(48, now - last);
             last = now;
-            if (animate) {
-              const steps = Math.max(1, Math.round(delta / 16));
-              for (let i = 0; i < steps; i += 1) step();
+            if (now >= nextAutoCycle) {
+              setMode(mode === "self" ? "independent" : "self");
             }
-
-            ctx.clearRect(0, 0, world.width, world.height);
-            const shake =
-              animate && mode === "self" && impact > 24
-                ? Math.sin(now / 34) * clamp(impact / 34, 0, 2.6)
-                : 0;
-            ctx.save();
-            ctx.translate(shake, 0);
-            ctx.fillStyle = "#eee8de";
-            ctx.fillRect(0, 0, world.width, world.height);
-
-            drawHopper();
-            drawStreamGuide();
-            drawBasin();
-            drawGate();
-
-            for (const particle of particles) {
-              ctx.strokeStyle = particle.color;
-              ctx.lineCap = "round";
-              ctx.lineWidth = Math.max(1.8, particle.r * 1.15);
-              ctx.beginPath();
-              ctx.moveTo(particle.x - particle.vx * 1.4, particle.y - particle.vy * 0.8);
-              ctx.lineTo(particle.x + particle.vx * 0.35, particle.y + particle.vy * 0.25);
-              ctx.stroke();
-            }
-
-            ctx.restore();
-            if (animate) scheduleFrame();
+            progress = (progress + delta / (mode === "self" ? 3200 : 3600)) % 1;
+            placeTokens(now);
+            scheduleFrame();
           }
 
           stage.addEventListener("click", () => {
             stopFrame();
             setMode(mode === "self" ? "independent" : "self");
-            draw(performance.now(), true);
+            placeTokens();
             updateFrameState();
           });
           stage.addEventListener("keydown", (event) => {
@@ -1961,19 +1736,12 @@ const formatted = date.toLocaleDateString("en-GB", {
             event.preventDefault();
             stopFrame();
             setMode(mode === "self" ? "independent" : "self");
-            draw(performance.now(), true);
+            placeTokens();
             updateFrameState();
           });
 
-          resize();
           setMode("self");
-          draw(performance.now(), true);
-          window.addEventListener("resize", () => {
-            stopFrame();
-            resize();
-            draw(performance.now(), true);
-            updateFrameState();
-          });
+          placeTokens();
 
           if ("IntersectionObserver" in window) {
             const observer = new IntersectionObserver(([entry]) => {

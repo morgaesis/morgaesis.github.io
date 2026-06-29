@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "review:writing": "node scripts/review-writing.mjs",
+    "check": "bun run review:writing && bun run build",
     "preview": "astro preview",
     "astro": "astro"
   },

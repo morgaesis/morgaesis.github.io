@@ -1,93 +1,77 @@
 ---
 title: Agents need harnesses, not bigger keys
 date: 2026-06-26
-description: Agent autonomy needs operation-scoped policy, evidence, and recovery, not standing credentials with better audit logs.
+description: Agent autonomy works best when each operation carries its own policy, evidence, credentials, and recovery path.
 ---
 
-Every serious agent demo eventually reaches the same awkward moment: the model has done the thinking and now wants the keys.
+The part I keep tripping over in agentic ops is the handoff into systems that remember mistakes.
 
-It found the migration, wrote the patch, read the logs, drafted the rollout, drove the browser, and proposed the fix. Then the human gets the worst job in the loop: approving a chain of small dangerous moves across GitHub, CI, Terraform, Ansible, Slack, a database console, a cloud account, and whatever shell happens to be open.
+The agent has found the migration, patched the config, read enough logs to make a plausible case, and now it wants to run the thing. Maybe that means `terraform apply`. Maybe it means a privileged playbook. Maybe it means touching the kube context you really do not want to touch at the end of a long debugging thread.
 
-That is not autonomy. It is a very fast approval treadmill.
+The human gets a bad job: decide whether the plan is still current, the inventory is stale, the rollback is real, and the health check measures the system rather than the host the agent happened to query. The approval dialog usually does not know any of that.
 
-The obvious answer is to treat the agent like a new employee: give it an identity, attach permissions, audit it later. That helps, but it puts the center of control in the wrong place. The important question is not "who is this agent?" It is "what consequence is about to happen, and is it predictable, reversible, scoped, and recorded?"
+Calling that autonomy feels generous. Mostly it is tab-juggling with a faster typist.
 
-The unit of control should be the work item, not the agent account.
+Treating the agent like a new employee helps only up to a point. Give it an identity, attach permissions, and you still have the same question at the dangerous moment: what is this operation about to change, what evidence justified it, and what happens if the answer is wrong?
 
-A work item should hold the goal, scope, assumptions, evidence, decisions, approvals, tool calls, failures, recovery steps, and outcome. Pull requests, terminal sessions, screenshots, traces, deploys, and rollbacks are artifacts of the work. Agents can come and go. The work item remains.
+I would put the control point on the work item. The record needs the approved target, reviewed artifact, minted lease, and recovery state. Pull requests, terminal sessions, deploys, and rollbacks hang off that record. A second agent should be able to continue from it without believing the first agent's summary.
 
 <figure class="article-figure sketch-figure" aria-label="A hand-sketched work item ledger receives intent, evidence, keys, execution traces, and recovery loops.">
   <figcaption>Authority belongs to the work, not the worker.</figcaption>
   <img src="/agents-harness-ledger-sketch.jpg" alt="Hand-sketched diagram of a locked ledger connecting an agent, evidence, policy, credentials, execution, and recovery." width="1200" height="800" loading="eager" fetchpriority="high" decoding="async" />
 </figure>
 
-By lead agent, I mean the agent carrying the task: the one holding the goal, talking to the human, delegating to helper agents, and deciding what to try next. That agent can coordinate, summarize, and propose. It should not be the source of truth. If it becomes confused or poisoned, another agent should be able to reconstruct the state from the work-item ledger and continue.
+By lead agent, I mean the one carrying the task: holding the goal, talking to the human, delegating to helper agents, and deciding what to try next. It can coordinate, summarize, and propose. It should not be the source of truth or the evidence source.
 
-The missing layer is a harness.
+Call the thing in the middle a harness.
 
-A harness sits between agents and real systems. It turns agent intent into controlled execution. It knows the work item, target, policy, evidence requirements, credential path, approval state, and audit trail. It does not ask whether the model sounds confident. It decides whether this operation may run, under these conditions, against this resource, for this piece of work.
+A harness sits between agents and real systems and turns intent into controlled execution. If approval covered plan digest `abc` and the current plan is `def`, the run dies there. If the operation needs AWS, the harness mints a short Vault lease for the one target instead of handing over a cloud key. The transcript and postcheck land next to the approval.
 
-This is not a new primitive. The pieces are already on the table: MCP gives tool boundaries; agent frameworks handle approval pauses; OPA and Vault cover policy and secret leases.[^platform-pieces]
+The bad version is familiar: a GitHub comment approves "the plan," CI has one digest, Vault issued a lease for a target, Ansible skipped three tasks in check mode, and the postcheck lives in monitoring. Nothing proves those facts belong to the same operation.[^platform-pieces][^operational-pieces]
 
-Privileged sessions can already be mediated and recorded. Terraform plans, Ansible check mode, migration previews, and CI can provide preflight evidence. Durable workflow systems can preserve long-running workflow state across crashes.[^operational-pieces]
+## Start with an operation contract
 
-None of those is the whole harness. The harness is the wiring between those parts: work records, operation catalogs, policy inputs, credential brokering, evidence, approvals, and recovery state.
+When people hear "harness," they often hear "another platform." That is not the part I would build first.
 
-## The solution is a contract, not a greenfield platform
+Do not rebuild Vault, OPA, CI, session recording, or Terraform. Pick the repeated operation that creates real babysitting and give it a record.
 
-The answer is not "go build everything yourself."
+For `restart_service_with_health_check`, the first record can be plain: service, host, drain result, health check, lease path. The executor can be small. The important bit is that approval binds to a specific artifact, not to a friendly paragraph from the agent.
 
-Buy the generic controls. Own the domain verbs. Identity, policy engines, secret brokers, session recorders, CI, observability, and workflow engines are infrastructure. The operation contract is product knowledge: what a refund means, what a safe migration means, what an acceptable deploy means, and what evidence proves it.
+I care less whether that layer comes from a vendor product or a 200-line internal service. I care whether it rejects stale artifacts, issues only the credential needed for the run, and leaves enough recovery state for the next person.
 
-The first version can be boring: a YAML file or database row that names one operation, a small executor, the existing ticket or pull request, pointers to the plan or preview artifact, a policy check, a leased credential path, and the postcheck that proves the system is healthy.
-
-A vendor can provide that layer. An internal platform can provide it. A thin service around one painful workflow can provide it. The useful test is the same in all three cases: can it define typed operations, bind approvals to immutable evidence, integrate with policy and secret systems, record executions, expose recovery state, and keep raw credentials out of the model context? If it only gives the agent an identity and a transcript, it has not solved this problem.
-
-## Trust agents for cognition, not authority
+## Keep authority outside the model
 
 Agents are usually trying to help. Treating them as hostile all the time makes them useless.
 
-But any agent that reads untrusted content can be hijacked for the duration of a task. A log line, README, ticket, web page, stack trace, or API response can carry instructions the model follows. OWASP lists prompt injection as the top risk in its 2025 LLM application risk list.[^owasp-prompt]
+But any agent that reads untrusted content can be hijacked for the duration of a task. It does not have to be dramatic. A README says to ignore the test failure. A support ticket looks like an instruction. A log line contains a pasted production command. OWASP putting prompt injection at the top of its 2025 LLM risk list is less interesting as a headline than as a design constraint.[^owasp-prompt]
 
-This failure mode is already showing up in real tools. MCP Inspector had a critical RCE vulnerability before version 0.14.1.[^mcp-inspector] Wordfence reported MCP-related privilege escalation in the AI Engine WordPress plugin affecting more than 100,000 sites.[^wordfence-ai-engine] Researchers have also demonstrated support-ticket prompt injection leading agents with database tools to expose private tables.[^supabase-mcp] These are not arguments against agents. They are arguments against handing them raw power.
+The failure is not theoretical. Researchers have demonstrated support-ticket prompt injection leading agents with database tools to expose private tables.[^supabase-mcp]
 
-The practical posture is simple: agents are aligned but corruptible.
+Text the agent reads should not widen the credential, tool, or approval it receives.
 
-Let them reason, draft, inspect, compare, summarize, test, and propose. Do not let them hold standing root, approve themselves, decide their own blast radius, or reach raw admin surfaces. Trust should buy autonomy, not latitude.
+Let agents inspect, test, draft, and propose. Do not let them mint their own production reach.
 
-## Expose verbs, not surfaces
+## Put dangerous systems behind named operations
 
-Most real systems have crude permission models. Some tasks need root. Some APIs are all-or-nothing. Some vendor CLIs are terrible in ways that no policy document can fully redeem.
+`apply_network_config_with_revert(host, config_digest, timeout)` should refuse a stale digest, arm rollback before touching the interface, and prove reachability through the management path before it writes success. If the health check is just `curl localhost`, it has not tested the dangerous part.
 
-Do not hand that surface to an agent and hope. Put a narrow verb in front of it.
+Behind the verb there may be serious power. The failure mode is the escape hatch with a nicer label: an approved operation that eventually calls `run_shell`, `execute_sql`, `run_arbitrary_playbook`, or `use_admin_browser` with agent-written arguments.
 
-A finance agent should not get the payment dashboard. It should get `prepare_refund(order_id, amount, reason)` with amount limits, policy checks, and approval thresholds.
-
-A CRM cleanup agent should not get a SQL console. It should get `preview_contact_merge`, `apply_contact_merge_batch`, and `restore_from_export`.
-
-A cloud-cost agent should not get broad cloud admin. It should get `mark_idle_resource`, `notify_owner`, and `delete_after_grace_period`.
-
-An ops agent should not get unrestricted SSH by default. It should get `collect_logs`, `restart_service_with_health_check`, `rotate_credential`, `drain_node`, or `apply_network_config_with_revert`.
-
-Behind the verb there may be serious power. In front of it there is a typed operation with parameters, limits, preconditions, postchecks, logging, and rollback behavior. This is not just least privilege. It is the least expressive interface that can do the job.
-
-The trap is the god-verb: `run_shell`, `execute_sql`, `run_arbitrary_playbook`, `use_admin_browser`.
-
-Break-glass needs escape hatches. Normal autonomy should not depend on them. If every hard case routes through a god-verb, the system is just root with extra paperwork.
+Break-glass needs escape hatches. Normal autonomy should not depend on them. If every hard case routes through a god-verb, the harness is mostly theater.
 
 ## Gate on consequence
 
-Evidence is not proof. It is the material a system can use to decide whether the next consequence is acceptable.
+Evidence is the input, not the verdict. A Terraform apply, an Ansible rollout, and a live debugging session should not pass through the same approval shape.
 
-For predictable work, gate on prediction. Terraform plan exists to preview infrastructure changes before apply.[^terraform-plan] A database migration preview, deployment diff, CI result, cost estimate, or row-count comparison serves the same role. Approval should bind to the exact artifact. If the commit, target, inventory, or plan changes, the approval expires.
+Ansible is the uncomfortable middle case. Check mode is useful, but only modules that support it report what they would change; unsupported modules report nothing and do nothing in check mode.[^ansible-check] If forty tasks exist and twelve were simulated, the approval should not say "apply the playbook." That run starts as one canary and earns the next host only if external health agrees.
 
-For exploratory work, gate on containment. There is no dry-run for "debug why this host is broken." The session changes as it proceeds. The first bad network command may cut off access. Here the preflight question is different: is there a backup, a time box, a transcript, scoped credentials, bounded egress, a canary, out-of-band access, or an auto-revert primitive?
+Terraform is cleaner. If I have the plan digest, I bind approval to the digest; if the commit, target, inventory, or plan changes, the old approval expires.[^terraform-plan]
 
-Netplan has a native example. `netplan try` applies a network configuration and reverts after a timeout unless the change is confirmed; the documented default timeout is 120 seconds.[^netplan-try] That is not prediction. It is a recovery path.
+Live debugging goes the other direction. There is no dry-run for "debug why this host is broken." The session changes as it proceeds, and the first bad network command may cut off access. Before that run starts, I want the backup, time box, transcript, scoped credential, and out-of-band path named.
 
-Bulk automation sits between the two. Ansible check mode is useful, but only modules that support it report what they would change; unsupported modules report nothing and do nothing in check mode.[^ansible-check] A harness should not say "dry-run passed." It should say what the dry-run covered. If forty tasks exist and twelve were meaningfully simulated, low coverage should force containment: one canary, serial rollout, health checks between batches, and abort-on-first-failure.
+Netplan has a native example. `netplan try` applies a network configuration and reverts after a timeout unless the change is confirmed; the documented default timeout is 120 seconds.[^netplan-try] That gives you a recovery path.
 
-A harnessed rollout should turn uncertainty into measured expansion. Apply to one host or 1% of tenants, wait for independent health and SLO signals, expand only while thresholds hold, and stop automatically when they do not.
+The run earns expansion; it does not get it up front.
 
 <figure class="article-figure gate-matrix" aria-label="Interactive consequence gate visualization for prediction, containment, and stop paths.">
   <figcaption>Gate consequence, not confidence.</figcaption>
@@ -170,23 +154,23 @@ A harnessed rollout should turn uncertainty into measured expansion. Apply to on
   </div>
 </figure>
 
-The rule is blunt: if you can see the consequence coming, gate on prediction. If you cannot, gate on containment. If you can do neither, stop pretending it is safe automation. Make a human own the residual risk.
+In an incident review, I want the record to show what was approved exactly, what was bounded, and where the system stopped. If the system cannot say that, the approval is just a person lending their account to a guess.
 
 ## Reversible is not harmless
 
-Rollback is not a spell. A change can be reversible and still be outage-inducing.
+Rollback restores configuration. It does not erase the outage.
 
-An agent can restart the right service at the wrong moment. A reversible config change can drop active connections. A migration can roll back cleanly after saturating a queue. A cloud cleanup can re-create a deleted resource after customers have already seen errors. A deployment can revert the code and leave caches, replicas, or dependent jobs in a bad state.
+An agent can restart the right service at the wrong moment. A migration can roll back cleanly after saturating a queue. A deployment can revert the code and still leave caches, replicas, or dependent jobs in a bad state.
 
-Some effects do not roll back. Customer-visible errors happened. Connections dropped. Jobs duplicated. Emails sent. External APIs were called. Payment side effects, data drift, cache poisoning, and downstream retries may all survive the revert. Rollback restores a system shape; compensation repairs side effects; incident handling deals with user impact. The harness has to know which world it is in.
+Some effects survive the revert. By then, users have seen errors, queues may have duplicated jobs, and the email provider already has the messages. Payment side effects, data drift, cache poisoning, and downstream retries can all outlive a clean rollback. At that point you are no longer restoring a system shape. You are compensating for damage.
 
-So the harness needs a disruption budget, not just a rollback button.
+The operation needs a disruption budget, not just a rollback button.
 
-For customer-facing systems, the gate should ask about SLO burn, maintenance windows, canary size, maximum parallelism, drain behavior, queue depth, cache warmup, dependency health, and abort thresholds. For internal systems, it should ask who is interrupted, how long the interruption is tolerable, and what signal proves service is back. "Can undo" is weaker than "can undo before anyone meaningfully hurts."
+For a restart verb, the disruption budget might say: one host drained at a time, queue depth under 500, five minutes of clean health before the next batch. For a migration, it might say: lock time under a threshold, fallback reads still working, rollback allowed only before the second write phase.
 
-Those are not just approval notes. They are live controls: error-rate or latency ceiling, SLO burn threshold, queue-depth ceiling, canary size, maximum parallelism, soak time, health-check source, automatic stop condition, and the exact recovery action.
+Those values should drive the executor. If queue depth crosses the limit, the run stops before the next host, not after the agent writes an apologetic summary.
 
-This is where the work item matters again. The approval should bind to the disruption envelope: what can go down, for how long, with what detection, and with what recovery path. If the action crosses that envelope, it is not the same approval anymore.
+The approval should name the disruption envelope. If the action needs more than that envelope allowed, it needs a new approval.
 
 <figure class="article-figure consequence-figure" aria-label="Interactive visualization showing that higher-consequence actions face stricter gates.">
   <figcaption>Higher consequence closes heavier gates.</figcaption>
@@ -206,31 +190,31 @@ This is where the work item matters again. The approval should bind to the disru
       <path class="consequence-track" d="M74 84 V334" />
       <path class="consequence-trail" data-consequence-trail d="M74 84 V84" />
       <g class="consequence-lane lane-local" data-level-lane="local">
-        <rect class="consequence-control control-local" x="112" y="58" width="178" height="58" rx="10" />
-        <path class="control-symbol" d="M136 88 H164 M150 74 V102" />
-        <text x="186" y="80">local</text>
-        <text class="control-note" x="186" y="102">record it</text>
+        <rect class="consequence-control control-local" x="96" y="58" width="218" height="58" rx="10" />
+        <path class="control-symbol" d="M122 88 H150 M136 74 V102" />
+        <text x="174" y="80">local</text>
+        <text class="control-note" x="174" y="102">record</text>
       </g>
       <g class="consequence-lane lane-reversible" data-level-lane="reversible">
-        <rect class="consequence-control control-reversible" x="112" y="138" width="178" height="58" rx="10" />
-        <path class="control-symbol" d="M136 168 C154 150 176 166 160 184 M160 184 L162 168 M160 184 L178 181" />
-        <text x="186" y="160">reversible</text>
-        <text class="control-note" x="186" y="182">rollback attached</text>
+        <rect class="consequence-control control-reversible" x="96" y="138" width="218" height="58" rx="10" />
+        <path class="control-symbol" d="M122 168 C140 150 162 166 146 184 M146 184 L148 168 M146 184 L164 181" />
+        <text x="174" y="160">reversible</text>
+        <text class="control-note" x="174" y="182">rollback</text>
       </g>
       <g class="consequence-lane lane-disruptive" data-level-lane="disruptive">
-        <rect class="consequence-control control-disruptive" x="112" y="218" width="178" height="58" rx="10" />
-        <path class="control-symbol" d="M136 238 H170 M136 254 H170 M136 270 H170" />
-        <circle class="warning-light light-left" cx="133" cy="215" r="6" />
-        <circle class="warning-light light-right" cx="169" cy="215" r="6" />
-        <text x="186" y="240">disruptive</text>
-        <text class="control-note" x="186" y="262">canary + SLO</text>
+        <rect class="consequence-control control-disruptive" x="96" y="218" width="218" height="58" rx="10" />
+        <path class="control-symbol" d="M122 238 H156 M122 254 H156 M122 270 H156" />
+        <circle class="warning-light light-left" cx="119" cy="215" r="6" />
+        <circle class="warning-light light-right" cx="155" cy="215" r="6" />
+        <text x="174" y="240">disruptive</text>
+        <text class="control-note" x="174" y="262">canary + SLO</text>
       </g>
       <g class="consequence-lane lane-irreversible" data-level-lane="irreversible">
-        <rect class="consequence-control control-irreversible" x="112" y="298" width="178" height="58" rx="10" />
-        <path class="control-symbol" d="M136 318 H170 M136 350 H170" />
-        <path class="control-lock" d="M144 338 V328 C144 316 164 316 164 328 V338 M136 338 H172 V356 H136 Z" />
-        <text x="186" y="320">irreversible</text>
-        <text class="control-note" x="186" y="342">new approval</text>
+        <rect class="consequence-control control-irreversible" x="96" y="298" width="218" height="58" rx="10" />
+        <path class="control-symbol" d="M122 318 H156 M122 350 H156" />
+        <path class="control-lock" d="M130 338 V328 C130 316 150 316 150 328 V338 M122 338 H158 V356 H122 Z" />
+        <text x="174" y="320">irreversible</text>
+        <text class="control-note" x="174" y="342">new approval</text>
       </g>
       <circle class="consequence-stop stop-local" cx="74" cy="84" r="5" />
       <circle class="consequence-stop stop-reversible" cx="74" cy="164" r="5" />
@@ -245,38 +229,86 @@ This is where the work item matters again. The approval should bind to the disru
 
 ## The proposer cannot be the evidence source
 
-Rubber-stamping happens when the system asking for approval also writes the safety case.
+The weakest version of this system asks the agent to attach its own safety memo.
 
-If the same agent recommends an action and writes the safety case for it, the human is reviewing a narrative controlled by the party asking for approval. A confused or hijacked agent can produce a beautiful packet: plausible blast radius, plausible rollback, plausible diff, confident recommendation.
+If the same agent recommends an action and writes the safety case for it, the human is reviewing a narrative controlled by the party asking for approval.
 
-The useful evidence should come from the harness or independent systems: the Terraform plan, migration tool, health probe, Vault audit log, session recording, canary result, or OpenTelemetry trace.[^otel]
+The bad packet often looks fine. The agent says rollback is safe, but the migration tool produced no down migration. It says the blast radius is one host, but inventory was stale. It links a health check from the host it just reconfigured. That is a story, not evidence.
 
-<figure class="article-figure evidence-split" aria-label="Interactive sand simulation showing why proposer-written evidence is unsafe.">
+I would rather see the migration tool's output than a well-written paragraph from the agent.[^otel]
+
+<figure class="article-figure evidence-split" aria-label="Interactive evidence filter showing why proposer-written evidence is unsafe.">
   <figcaption>When the proposer grades itself, bad evidence reaches execution.</figcaption>
-  <div class="sand-stage" data-sand-stage tabindex="0" role="button" aria-label="Tap to switch between self-graded approval and independent evidence. The sand shows failure leaking or being trapped.">
-    <canvas width="1080" height="720"></canvas>
-    <div class="sand-hud" aria-hidden="true">
-      <span>claim</span>
-      <span>independent check</span>
-      <span>execution</span>
-    </div>
-    <div class="sand-mode" aria-live="polite">self-graded: failure leaks through</div>
+  <div class="sand-stage evidence-stage" data-sand-stage tabindex="0" role="button" aria-label="Tap to switch between self-graded approval and independent evidence. In self-graded mode, a bad claim reaches execution. In independent mode, the bad claim is diverted before execution.">
+    <svg class="evidence-map" viewBox="0 0 360 420" aria-hidden="true">
+      <defs>
+        <linearGradient id="evidence-safe-flow" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#3f8f8a" stop-opacity="0.94" />
+          <stop offset="1" stop-color="#7db9b2" stop-opacity="0.82" />
+        </linearGradient>
+        <linearGradient id="evidence-bad-flow" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#bf5f5a" stop-opacity="0.96" />
+          <stop offset="1" stop-color="#dc8f83" stop-opacity="0.88" />
+        </linearGradient>
+        <filter id="evidence-token-glow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <rect class="evidence-panel" x="22" y="24" width="316" height="368" rx="26" />
+      <text x="46" y="58">claim</text>
+      <text x="135" y="58">check</text>
+      <text x="262" y="58">execution</text>
+      <path class="evidence-shadow-route" d="M42 218 C92 218 112 206 150 206 C204 206 242 216 316 218" />
+      <path class="evidence-shadow-route" d="M42 218 C100 170 242 164 318 218" />
+      <path class="evidence-shadow-route" d="M150 215 C168 260 214 302 284 318" />
+      <path class="evidence-route route-self" data-self-route d="M42 218 C100 170 242 164 318 218" />
+      <path class="evidence-route route-pass" data-pass-route d="M42 218 C92 218 112 206 150 206 C204 206 242 216 316 218" />
+      <path class="evidence-route route-reject" data-reject-route d="M150 215 C168 260 214 302 284 318" />
+      <g class="evidence-source">
+        <path class="claim-sheet" d="M54 150 H113 C121 150 127 156 127 164 V240 C127 248 121 254 113 254 H54 Z" />
+        <path class="claim-line" d="M70 174 H111 M70 194 H107 M70 214 H112" />
+        <circle class="claim-badge" cx="118" cy="158" r="12" />
+      </g>
+      <g class="evidence-filter" data-evidence-filter>
+        <ellipse class="filter-shadow" cx="160" cy="210" rx="55" ry="66" />
+        <path class="filter-glass" d="M137 142 H188 L175 276 H124 Z" />
+        <path class="filter-slot" data-filter-slot d="M146 176 H180 M142 204 H178 M138 232 H173" />
+        <path class="filter-crack" d="M159 165 L151 198 L164 218 L153 252" />
+      </g>
+      <g class="execution-zone">
+        <path class="execution-boundary" d="M300 154 V282" />
+        <path class="execution-lines" d="M314 176 H324 M314 206 H324 M314 236 H324 M314 266 H324" />
+        <circle class="execution-impact" data-execution-impact cx="306" cy="218" r="34" />
+      </g>
+      <g class="quarantine-zone">
+        <path class="quarantine-basin" d="M240 318 C250 336 286 344 310 324" />
+        <path class="quarantine-mark" d="M262 304 L292 334 M292 304 L262 334" />
+      </g>
+      <circle class="evidence-good-token" data-evidence-good-token cx="42" cy="218" r="7" filter="url(#evidence-token-glow)" />
+      <circle class="evidence-token-ring" data-evidence-ring cx="42" cy="218" r="17" />
+      <circle class="evidence-bad-token" data-evidence-bad-token cx="42" cy="218" r="10" filter="url(#evidence-token-glow)" />
+    </svg>
+    <div class="sand-mode" aria-live="polite">self-graded: a bad claim reaches execution</div>
   </div>
 </figure>
 
-Those measurements can be wrong. Inventory can be stale. APIs can lag. Dry-runs can differ from applies. But they fail differently than a persuasive agent fails. That difference is what makes the approval worth anything.
+Probes are fallible. A stale inventory record fails in a different shape than an agent-written safety memo, and that difference is what makes the approval worth anything.
 
-Supply-chain systems already have language for this. in-toto and SLSA use attestations and provenance to describe how artifacts were produced.[^slsa-intoto] Agentic operations need the same instinct. Chat logs are not enough. Record who requested what, what measured evidence existed, what capability was minted, what executed, and what changed.
+A chat transcript is too thin for provenance. The run record has to connect the request, measured evidence, minted capability, execution, and changed state.
 
-## Sandboxes are useful, not magic
+## Sandboxes still have a blast radius
 
-Discovery often needs freedom. Agents need to try things, run scripts, inspect broken states, and learn. Production should not be their scratchpad.
+Before an agent knows the fix, it needs room to poke at the broken state. Production should not be that room.
 
-Run uncertain work where damage is bounded. Existing isolation tools help. gVisor interposes a user-space kernel for container isolation.[^gvisor] Firecracker runs lightweight microVMs for stronger workload isolation.[^firecracker] E2B and similar services provide sandboxes aimed at AI-agent workloads.[^e2b]
+Run uncertain work where damage is bounded. Isolate it, then check what still leaks.[^sandbox-isolation]
 
-But "sandbox" is not a synonym for "safe." A scratch clone can contain real secrets. An ephemeral VM can reach a metadata service. A copied database can contain sensitive records. A test environment can publish packages or sign artifacts.
+"Sandbox" is weaker than "safe." The failures are ordinary: a scratch clone carries a production `.env`; an ephemeral VM can reach a metadata service; a copied database still contains sensitive records; a test registry token can publish a real package or sign an artifact.
 
-Check four blast radii: mutation, disclosure, network reach, and supply-chain reach.
+Before I call the sandbox safe, I want plain answers: can it mutate production, read secrets, reach metadata, or publish and sign something that leaves the sandbox?
 
 <figure class="article-figure sandbox-figure" aria-label="Interactive sandbox visualization showing an agent disturbing state inside a glass box while production remains outside.">
   <figcaption>Useful freedom still needs walls.</figcaption>
@@ -291,47 +323,39 @@ Check four blast radii: mutation, disclosure, network reach, and supply-chain re
   </div>
 </figure>
 
-The output of exploration should be understanding. Then distill it into a durable artifact: a pull request, test, monitor, runbook, rollback procedure, Terraform change, Ansible role, or named operation. GitOps is excellent once desired state is known. It is clumsy while discovering what desired state should be.
+The agent should leave behind something less fragile than shell history: a pull request with a test, a monitor, a rollback note, or a named operation. GitOps is excellent once desired state is known. It is clumsy while discovering what desired state should be.
 
-The operation catalog grows from that loop: messy bounded exploration, distilled into a reviewed verb, reused safely next time.
+The catalog grows from that loop: bounded exploration, one reviewed operation, then another. It is slower than letting the agent keep the shell, but the next run starts from a reviewed operation instead of an open terminal.
 
-## Partial failure is the real test
+## Partial failure is where approvals get stale
 
-Most approval systems focus on the moment before action. Real systems fail after action starts.
+The playbook changed three hosts and died on the fourth. The local health check passed, the queue broke ten minutes later, and now the rollback only describes half the system.
 
-A migration half-applies. A playbook changes three hosts and dies on the fourth. A credential rotates but consumers do not reload. A deployment passes the first check and breaks a queue ten minutes later. A rollback fails.
+At that point the original approval no longer describes reality. Recovery starts from a different state.
 
-At that point the original approval no longer describes reality. Recovery is a new operation from a different state.
+The harness needs to know the last completed checkpoint, what was mutated, which idempotency key is still live, and what state recovery starts from. Durable workflow systems can preserve state and resume execution, but they do not decide what is safe. That belongs in the operation design.
 
-The harness needs checkpoints, current-state capture, resume points, idempotency keys, and new gates when recovery crosses another point of no return. Durable workflow systems can preserve state and resume execution, but they do not decide what is safe. That belongs in the operation design.
+Crossing an abort threshold should create a recovery work item, not invite the agent to improvise in the same thread. Capture current state, stop further expansion, name the owner, and make the next action explicit.
 
-Crossing an abort threshold should create a recovery work item, not invite the agent to improvise in the same thread. Capture current state, stop further expansion, name the owner, and make the next action explicit: resume, roll back, compensate, escalate, or freeze until a human takes over.
-
-The approval graph should follow irreversibility boundaries. Do not ask humans to approve every reversible step. Do not hide three irreversible commits inside one vague approval.
+The approval graph should follow irreversibility boundaries. A restart retry and a compensating data fix do not belong under the same old click.
 
 ## Two clocks
 
 Moving authority out of agents does not remove authority. It concentrates it in the harness and operation catalog.
 
-That is good, but dangerous.
+Running `restart_service_with_health_check` can be fast. Changing that verb so it accepts a glob, skips drain, or targets a new service class is a production change. Every future run inherits that mistake.
 
-Executing reviewed operations should be fast. Adding new privileged operations should feel heavier.
+A new verb is not a helper function. It needs an owner, tests for ugly parameter values, logs that survive a bad run, and a way to remove it.
 
-A new verb is not a helper function. It expands what future agents can do. It needs owner review, parameter-space analysis, worst-case thinking, logging rules, rollback behavior, tests, versioning, signing, and a way to remove it.
-
-The catalog is the key-cutting machine. Do not leave it on the fast agentic clock.
+The service owner should review catalog edits the same way they review a deploy path or admin role. A bad verb is a control-plane bug, not a typo.
 
 ## Start with one operation
 
-Start with the actions that create the most babysitting: refunds, account changes, deploys, migrations, data cleanup, access grants, cloud cleanup, playbook runs, privileged sessions.
+In an ops-heavy system, the first candidate might be deploy-time restarts: `restart_service_with_health_check` before deploys. It forces the first useful decision: who can restart what, with which lease, and what stops the next host.
 
-First, wrap one repeated high-friction action. Second, require evidence and postchecks before it can run. Third, make every incident either improve that verb or produce a new one. Fourth, only after several verbs exist, invest in catalog governance.
+After a few verbs exist, incident reviews get more useful. A failed run either tightens an existing operation or justifies a new one.
 
-This is how autonomy compounds: not because the agent gets more trusted, but because the environment gets more operable.
-
-The test for an agent platform is not whether it can act without asking. It is whether the question it asks is narrow, factual, and tied to evidence: this operation, against this target, inside this disruption envelope, with this recovery path.
-
-That is useful autonomy: not bigger keys, but smaller, truer decisions.
+The approval I want to see is boring: restart nginx on host X, using plan Y, with rollback armed and queue depth below Z. A human can answer that. They are no longer being asked to lend the agent a cloud account and hope the summary is true.
 
 ---
 
@@ -340,12 +364,7 @@ That is useful autonomy: not bigger keys, but smaller, truer decisions.
 [^terraform-plan]: [Terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan).
 [^ansible-check]: [Ansible check mode](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html).
 [^owasp-prompt]: [OWASP LLM01 prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/).
-[^mcp-inspector]: [NVD CVE-2025-49596](https://nvd.nist.gov/vuln/detail/CVE-2025-49596).
-[^wordfence-ai-engine]: [Wordfence AI Engine MCP report](https://www.wordfence.com/blog/2025/06/100000-wordpress-sites-affected-by-privilege-escalation-via-mcp-in-ai-engine-wordpress-plugin/) <time class="ref-date" datetime="2025-06-18" title="Published June 18, 2025">2025-06-18</time>.
 [^supabase-mcp]: [Supabase MCP prompt-injection writeup](https://generalanalysis.com/blog/supabase-mcp-blog) <time class="ref-date" datetime="2026-04-10" title="Published April 10, 2026">2026-04-10</time>.
 [^netplan-try]: [netplan try](https://netplan.readthedocs.io/en/0.106.1/netplan-try/).
 [^otel]: [OpenTelemetry docs](https://opentelemetry.io/docs/).
-[^slsa-intoto]: [in-toto and SLSA](https://slsa.dev/blog/2023/05/in-toto-and-slsa) <time class="ref-date" datetime="2023-05-02" title="Published May 2, 2023">2023-05-02</time>.
-[^gvisor]: [gVisor docs](https://gvisor.dev/docs/).
-[^firecracker]: [Firecracker docs](https://firecracker-microvm.github.io/).
-[^e2b]: [E2B docs](https://e2b.dev/).
+[^sandbox-isolation]: [gVisor docs](https://gvisor.dev/docs/); [Firecracker docs](https://firecracker-microvm.github.io/); [E2B docs](https://e2b.dev/).
